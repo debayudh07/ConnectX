@@ -3,16 +3,22 @@
 
 export interface BountyStructure {
   id: bigint;
-  issuer: `0x${string}`;
-  title: string;
+  maintainer: `0x${string}`;
+  githubIssueUrl: string;
+  repositoryUrl: string;
   description: string;
-  reward: bigint;
-  deadline: bigint;
-  skillsRequired: string[];
-  status: number; // 0: Open, 1: Claimed, 2: Completed, 3: Cancelled
+  rewardAmount: bigint;
+  status: number; // 0: Open, 1: Claimed, 2: Submitted, 3: Verified, 4: Paid, 5: Disputed, 6: Cancelled
   claimedBy: `0x${string}`;
-  submissionHash: string;
-  verifierContract: `0x${string}`;
+  submissionPrUrl: string;
+  createdAt: bigint;
+  claimedAt: bigint;
+  submittedAt: bigint;
+  verifiedAt: bigint;
+  deadline: bigint;
+  isCompleted: boolean;
+  requiredSkills: string[];
+  difficultyLevel: bigint;
 }
 
 export interface DeveloperStats {
@@ -41,13 +47,22 @@ export interface SubmissionInfo {
   isVerified: boolean;
 }
 
+export interface BountySubmission {
+  developer: `0x${string}`;
+  prUrl: string;
+  description: string;
+  submittedAt: bigint;
+  isVerified: boolean;
+}
+
 // Contract method parameters
 export interface CreateBountyParams {
-  title: string;
+  githubIssueUrl: string;
+  repositoryUrl: string;
   description: string;
   deadline: bigint;
-  skillsRequired: string[];
-  verifierContract: `0x${string}`;
+  requiredSkills: string[];
+  difficultyLevel: bigint;
 }
 
 export interface ClaimBountyParams {
@@ -124,9 +139,12 @@ export interface SubmissionVerifiedEvent {
 // Constants
 export const BOUNTY_STATUS = {
   OPEN: 0,
-  CLAIMED: 1, 
-  COMPLETED: 2,
-  CANCELLED: 3
+  CLAIMED: 1,
+  SUBMITTED: 2,
+  VERIFIED: 3,
+  PAID: 4,
+  DISPUTED: 5,
+  CANCELLED: 6
 } as const;
 
 export const REPUTATION_TIERS = {

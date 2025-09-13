@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 export function Navbar() {
@@ -9,7 +10,57 @@ export function Navbar() {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <h1 className="text-2xl font-bold text-white">ConnectX</h1>
+            <Link href="/" className="text-2xl font-bold text-white hover:text-gray-300">
+              ConnectX
+            </Link>
+          </div>
+
+          {/* Navigation Links */}
+          <div className="hidden md:block">
+            <div className="ml-10 flex items-baseline space-x-4">
+              <Link
+                href="/bounties/browse-all"
+                className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+              >
+                Browse All
+              </Link>
+              <Link
+                href="/bounties/view-bounties"
+                className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+              >
+                View Bounty
+              </Link>
+              <Link
+                href="/bounties/browse-all"
+                className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+              >
+                Browse All
+              </Link>
+              <Link
+                href="/bounties/create-bounties"
+                className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+              >
+                Create Bounty
+              </Link>
+              <Link
+                href="/bounties/debug"
+                className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+              >
+                Debug
+              </Link>
+              <Link
+                href="/bounties/developer-dashboard"
+                className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+              >
+                Developer
+              </Link>
+              <Link
+                href="/bounties/maintainer-dashboard"
+                className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+              >
+                Maintainer
+              </Link>
+            </div>
           </div>
 
           {/* Wallet Connection */}
