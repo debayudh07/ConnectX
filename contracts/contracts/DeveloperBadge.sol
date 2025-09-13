@@ -65,7 +65,7 @@ contract DeveloperBadge is ERC721, ERC721URIStorage, ERC721Enumerable, AccessCon
     function mintBadge(
         address developer,
         uint256 bountyId,
-        string memory metadata
+        string memory /* metadata */
     ) external onlyRole(MINTER_ROLE) returns (uint256) {
         require(developer != address(0), "DeveloperBadge: invalid developer address");
         
@@ -391,10 +391,6 @@ contract DeveloperBadge is ERC721, ERC721URIStorage, ERC721Enumerable, AccessCon
     
     function _increaseBalance(address account, uint128 amount) internal override(ERC721, ERC721Enumerable) {
         super._increaseBalance(account, amount);
-    }
-    
-    function _burn(uint256 tokenId) internal override {
-        super._burn(tokenId);
     }
     
     function tokenURI(uint256 tokenId) public view override(ERC721, ERC721URIStorage) returns (string memory) {

@@ -133,12 +133,6 @@ contract DeveloperReputation is AccessControl, Pausable {
     }
     
     // Public view functions that are used internally
-    function getCurrentTier(address developer) public view returns (string memory) {
-        uint256 score = developers[developer].reputationScore;
-        ReputationTier memory tier = _getCurrentTierInfo(score);
-        return tier.name;
-    }
-    
     function getCurrentStreak(address developer) public view returns (uint256) {
         DeveloperProfile storage profile = developers[developer];
         
@@ -151,6 +145,12 @@ contract DeveloperReputation is AccessControl, Pausable {
         }
         
         return profile.currentStreak;
+    }
+    
+    function getCurrentTier(address developer) public view returns (string memory) {
+        uint256 score = developers[developer].reputationScore;
+        ReputationTier memory tier = _getCurrentTierInfo(score);
+        return tier.name;
     }
     
     function updateReputation(
