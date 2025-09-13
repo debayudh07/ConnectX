@@ -541,4 +541,4 @@ contract BountyMarketplace is AccessControl, ReentrancyGuard, Pausable {
     receive() external payable {
         // Allow direct deposits for additional funding
     }
-}
+} 

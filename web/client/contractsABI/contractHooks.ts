@@ -2506,10 +2506,50 @@ export const useBountyMarketplace = () => {
     });
   };
 
+  const submitWork = async (bountyId: bigint, prUrl: string, description: string) => {
+    return writeContract({
+      address: CONTRACT_ADDRESSES.BOUNTY_MARKETPLACE,
+      abi: BountyMarketplaceABI,
+      functionName: 'submitWork',
+      args: [bountyId, prUrl, description]
+    });
+  };
+
+  const verifyAndPayBounty = async (bountyId: bigint) => {
+    return writeContract({
+      address: CONTRACT_ADDRESSES.BOUNTY_MARKETPLACE,
+      abi: BountyMarketplaceABI,
+      functionName: 'verifyAndPayBounty',
+      args: [bountyId]
+    });
+  };
+
+  const disputeBounty = async (bountyId: bigint, reason: string) => {
+    return writeContract({
+      address: CONTRACT_ADDRESSES.BOUNTY_MARKETPLACE,
+      abi: BountyMarketplaceABI,
+      functionName: 'disputeBounty',
+      args: [bountyId, reason]
+    });
+  };
+
+  const resolveBountyDispute = async (bountyId: bigint, payDeveloper: boolean, resolution: string) => {
+    return writeContract({
+      address: CONTRACT_ADDRESSES.BOUNTY_MARKETPLACE,
+      abi: BountyMarketplaceABI,
+      functionName: 'resolveBountyDispute',
+      args: [bountyId, payDeveloper, resolution]
+    });
+  };
+
   return {
     createBounty,
     claimBounty,
     cancelBounty,
+    submitWork,
+    verifyAndPayBounty,
+    disputeBounty,
+    resolveBountyDispute,
     hash,
     isPending,
     error
@@ -2666,6 +2706,108 @@ export const useDeveloperCompletions = (developerAddress: `0x${string}`) => {
   };
 };
 
+// Platform Configuration Hooks
+export const usePlatformFeePercentage = () => {
+  const { data: feePercentage, isLoading, error } = useReadContract({
+    address: CONTRACT_ADDRESSES.BOUNTY_MARKETPLACE,
+    abi: BountyMarketplaceABI,
+    functionName: 'platformFeePercentage'
+  });
+
+  return {
+    feePercentage,
+    isLoading,
+    error
+  };
+};
+
+export const useMinimumBountyAmount = () => {
+  const { data: minimumAmount, isLoading, error } = useReadContract({
+    address: CONTRACT_ADDRESSES.BOUNTY_MARKETPLACE,
+    abi: BountyMarketplaceABI,
+    functionName: 'minimumBountyAmount'
+  });
+
+  return {
+    minimumAmount,
+    isLoading,
+    error
+  };
+};
+
+export const useMaximumClaimDuration = () => {
+  const { data: maxDuration, isLoading, error } = useReadContract({
+    address: CONTRACT_ADDRESSES.BOUNTY_MARKETPLACE,
+    abi: BountyMarketplaceABI,
+    functionName: 'maximumClaimDuration'
+  });
+
+  return {
+    maxDuration,
+    isLoading,
+    error
+  };
+};
+
+export const useFeeRecipient = () => {
+  const { data: feeRecipient, isLoading, error } = useReadContract({
+    address: CONTRACT_ADDRESSES.BOUNTY_MARKETPLACE,
+    abi: BountyMarketplaceABI,
+    functionName: 'feeRecipient'
+  });
+
+  return {
+    feeRecipient,
+    isLoading,
+    error
+  };
+};
+
+export const useIsPaused = () => {
+  const { data: isPaused, isLoading, error } = useReadContract({
+    address: CONTRACT_ADDRESSES.BOUNTY_MARKETPLACE,
+    abi: BountyMarketplaceABI,
+    functionName: 'paused'
+  });
+
+  return {
+    isPaused,
+    isLoading,
+    error
+  };
+};
+
+// Role Management Hooks
+export const useHasRole = (role: `0x${string}`, account: `0x${string}`) => {
+  const { data: hasRole, isLoading, error } = useReadContract({
+    address: CONTRACT_ADDRESSES.BOUNTY_MARKETPLACE,
+    abi: BountyMarketplaceABI,
+    functionName: 'hasRole',
+    args: [role, account]
+  });
+
+  return {
+    hasRole,
+    isLoading,
+    error
+  };
+};
+
+export const useHasSubmitted = (bountyId: bigint, developer: `0x${string}`) => {
+  const { data: hasSubmitted, isLoading, error } = useReadContract({
+    address: CONTRACT_ADDRESSES.BOUNTY_MARKETPLACE,
+    abi: BountyMarketplaceABI,
+    functionName: 'hasSubmitted',
+    args: [bountyId, developer]
+  });
+
+  return {
+    hasSubmitted,
+    isLoading,
+    error
+  };
+};
+
 // Developer Reputation Hooks  
 export const useDeveloperReputation = () => {
   const { writeContract, data: hash, isPending, error } = useWriteContract();
@@ -2771,7 +2913,7 @@ export const useBountyVerifier = () => {
       address: CONTRACT_ADDRESSES.SIMPLE_BOUNTY_VERIFIER,
       abi: SimpleBountyVerifierABI,
       functionName: 'submitWork',
-      args: [params.bountyId, params.submissionHash, params.githubPR]
+      args: [params.bountyId, params.prUrl, params.description]
     });
   };
 
@@ -2827,6 +2969,192 @@ export const useConnectXData = (address: `0x${string}`) => {
   };
 };
 
+// Admin Management Hooks
+export const useBountyMarketplaceAdmin = () => {
+  const { writeContract, data: hash, isPending, error } = useWriteContract();
+
+  const setPlatformFee = async (newFeePercentage: bigint) => {
+    return writeContract({
+      address: CONTRACT_ADDRESSES.BOUNTY_MARKETPLACE,
+      abi: BountyMarketplaceABI,
+      functionName: 'setPlatformFee',
+      args: [newFeePercentage]
+    });
+  };
+
+  const setFeeRecipient = async (newFeeRecipient: `0x${string}`) => {
+    return writeContract({
+      address: CONTRACT_ADDRESSES.BOUNTY_MARKETPLACE,
+      abi: BountyMarketplaceABI,
+      functionName: 'setFeeRecipient',
+      args: [newFeeRecipient]
+    });
+  };
+
+  const setMinimumBountyAmount = async (newMinimum: bigint) => {
+    return writeContract({
+      address: CONTRACT_ADDRESSES.BOUNTY_MARKETPLACE,
+      abi: BountyMarketplaceABI,
+      functionName: 'setMinimumBountyAmount',
+      args: [newMinimum]
+    });
+  };
+
+  const setMaximumClaimDuration = async (newDuration: bigint) => {
+    return writeContract({
+      address: CONTRACT_ADDRESSES.BOUNTY_MARKETPLACE,
+      abi: BountyMarketplaceABI,
+      functionName: 'setMaximumClaimDuration',
+      args: [newDuration]
+    });
+  };
+
+  const setContractAddresses = async (
+    developerBadge: `0x${string}`,
+    developerReputation: `0x${string}`,
+    bountyVerifier: `0x${string}`
+  ) => {
+    return writeContract({
+      address: CONTRACT_ADDRESSES.BOUNTY_MARKETPLACE,
+      abi: BountyMarketplaceABI,
+      functionName: 'setContractAddresses',
+      args: [developerBadge, developerReputation, bountyVerifier]
+    });
+  };
+
+  const pause = async () => {
+    return writeContract({
+      address: CONTRACT_ADDRESSES.BOUNTY_MARKETPLACE,
+      abi: BountyMarketplaceABI,
+      functionName: 'pause',
+      args: []
+    });
+  };
+
+  const unpause = async () => {
+    return writeContract({
+      address: CONTRACT_ADDRESSES.BOUNTY_MARKETPLACE,
+      abi: BountyMarketplaceABI,
+      functionName: 'unpause',
+      args: []
+    });
+  };
+
+  const emergencyWithdraw = async () => {
+    return writeContract({
+      address: CONTRACT_ADDRESSES.BOUNTY_MARKETPLACE,
+      abi: BountyMarketplaceABI,
+      functionName: 'emergencyWithdraw',
+      args: []
+    });
+  };
+
+  const grantRole = async (role: `0x${string}`, account: `0x${string}`) => {
+    return writeContract({
+      address: CONTRACT_ADDRESSES.BOUNTY_MARKETPLACE,
+      abi: BountyMarketplaceABI,
+      functionName: 'grantRole',
+      args: [role, account]
+    });
+  };
+
+  const revokeRole = async (role: `0x${string}`, account: `0x${string}`) => {
+    return writeContract({
+      address: CONTRACT_ADDRESSES.BOUNTY_MARKETPLACE,
+      abi: BountyMarketplaceABI,
+      functionName: 'revokeRole',
+      args: [role, account]
+    });
+  };
+
+  const renounceRole = async (role: `0x${string}`, callerConfirmation: `0x${string}`) => {
+    return writeContract({
+      address: CONTRACT_ADDRESSES.BOUNTY_MARKETPLACE,
+      abi: BountyMarketplaceABI,
+      functionName: 'renounceRole',
+      args: [role, callerConfirmation]
+    });
+  };
+
+  return {
+    setPlatformFee,
+    setFeeRecipient,
+    setMinimumBountyAmount,
+    setMaximumClaimDuration,
+    setContractAddresses,
+    pause,
+    unpause,
+    emergencyWithdraw,
+    grantRole,
+    revokeRole,
+    renounceRole,
+    hash,
+    isPending,
+    error
+  };
+};
+
+// Role Constants Hooks
+export const useRoleConstants = () => {
+  const { data: defaultAdminRole } = useReadContract({
+    address: CONTRACT_ADDRESSES.BOUNTY_MARKETPLACE,
+    abi: BountyMarketplaceABI,
+    functionName: 'DEFAULT_ADMIN_ROLE'
+  });
+
+  const { data: adminRole } = useReadContract({
+    address: CONTRACT_ADDRESSES.BOUNTY_MARKETPLACE,
+    abi: BountyMarketplaceABI,
+    functionName: 'ADMIN_ROLE'
+  });
+
+  const { data: maintainerRole } = useReadContract({
+    address: CONTRACT_ADDRESSES.BOUNTY_MARKETPLACE,
+    abi: BountyMarketplaceABI,
+    functionName: 'MAINTAINER_ROLE'
+  });
+
+  const { data: verifierRole } = useReadContract({
+    address: CONTRACT_ADDRESSES.BOUNTY_MARKETPLACE,
+    abi: BountyMarketplaceABI,
+    functionName: 'VERIFIER_ROLE'
+  });
+
+  return {
+    defaultAdminRole,
+    adminRole,
+    maintainerRole,
+    verifierRole
+  };
+};
+
+// Contract References Hooks
+export const useContractReferences = () => {
+  const { data: developerBadge } = useReadContract({
+    address: CONTRACT_ADDRESSES.BOUNTY_MARKETPLACE,
+    abi: BountyMarketplaceABI,
+    functionName: 'developerBadge'
+  });
+
+  const { data: developerReputation } = useReadContract({
+    address: CONTRACT_ADDRESSES.BOUNTY_MARKETPLACE,
+    abi: BountyMarketplaceABI,
+    functionName: 'developerReputation'
+  });
+
+  const { data: bountyVerifier } = useReadContract({
+    address: CONTRACT_ADDRESSES.BOUNTY_MARKETPLACE,
+    abi: BountyMarketplaceABI,
+    functionName: 'bountyVerifier'
+  });
+
+  return {
+    developerBadge,
+    developerReputation,
+    bountyVerifier
+  };
+};
+
 export default {
   useBountyMarketplace,
   useBountyData,
@@ -2838,6 +3166,13 @@ export default {
   useMaintainerBounties,
   useDeveloperClaims,
   useDeveloperCompletions,
+  usePlatformFeePercentage,
+  useMinimumBountyAmount,
+  useMaximumClaimDuration,
+  useFeeRecipient,
+  useIsPaused,
+  useHasRole,
+  useHasSubmitted,
   useDeveloperReputation,
   useReputationData,
   useDeveloperBadge,
@@ -2845,5 +3180,8 @@ export default {
   useBountyVerifier,
   useSubmissionData,
   useTransactionStatus,
-  useConnectXData
+  useConnectXData,
+  useBountyMarketplaceAdmin,
+  useRoleConstants,
+  useContractReferences
 };

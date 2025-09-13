@@ -20,6 +20,7 @@ import {
   QueryClientProvider,
   QueryClient,
 } from "@tanstack/react-query";
+import { Toaster } from "@/components/ui/sonner";
 
 const config = getDefaultConfig({
   appName: 'ConnectX',
@@ -44,6 +45,16 @@ export function Providers({ children }: { children: React.ReactNode }) {
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider theme={customTheme}>
           {children}
+          <Toaster
+            toastOptions={{
+              style: {
+                background: 'rgb(0 0 0 / 0.9)',
+                border: '1px solid rgb(255 255 255 / 0.1)',
+                color: 'white',
+                backdropFilter: 'blur(12px)',
+              },
+            }}
+          />
         </RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>

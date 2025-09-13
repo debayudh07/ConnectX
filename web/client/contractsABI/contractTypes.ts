@@ -71,14 +71,30 @@ export interface ClaimBountyParams {
 
 export interface SubmitWorkParams {
   bountyId: bigint;
-  submissionHash: string;
-  githubPR: string;
+  prUrl: string;
+  description: string;
 }
 
 export interface VerifySubmissionParams {
   bountyId: bigint;
   isValid: boolean;
   feedback: string;
+}
+
+export interface DisputeBountyParams {
+  bountyId: bigint;
+  reason: string;
+}
+
+export interface CancelBountyParams {
+  bountyId: bigint;
+  reason: string;
+}
+
+export interface ResolveBountyDisputeParams {
+  bountyId: bigint;
+  payDeveloper: boolean;
+  resolution: string;
 }
 
 export interface MintBadgeParams {
