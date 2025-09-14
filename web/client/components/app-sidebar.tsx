@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import Link from "next/link"
 import {
   IconBrandGithub,
   IconChartBar,
@@ -165,10 +166,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               asChild
               className="data-[slot=sidebar-menu-button]:!p-1.5 text-white hover:bg-white/10"
             >
-              <a href="/">
+              <Link href="/">
                 <IconInnerShadowTop className="!size-5 text-red-400" />
                 <span className="text-base font-semibold text-white">ConnectX</span>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

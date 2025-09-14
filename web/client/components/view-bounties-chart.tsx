@@ -2,7 +2,6 @@
 
 import * as React from "react"
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
-import { formatEther } from "viem"
 
 import { useIsMobile } from "@/hooks/use-mobile"
 import { useAllBounties, useBountiesByStatus } from "@/contractsABI/contractHooks"

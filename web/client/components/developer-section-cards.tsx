@@ -82,7 +82,7 @@ export function DeveloperSectionCards() {
             Your current bounties <IconTrendingUp className="size-4 text-red-400" />
           </div>
           <div className="text-white/60">
-            Bounties you've claimed to work on
+            Bounties you&apos;ve claimed to work on
           </div>
         </CardFooter>
       </Card>

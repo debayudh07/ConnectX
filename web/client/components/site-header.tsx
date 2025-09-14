@@ -2,6 +2,7 @@
 
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import { useAccount } from 'wagmi'
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { SidebarTrigger } from "@/components/ui/sidebar"
@@ -9,7 +10,7 @@ import { Badge } from "@/components/ui/badge"
 import { IconBrandGithub, IconExternalLink } from "@tabler/icons-react"
 
 export function SiteHeader() {
-  const { address, isConnected } = useAccount()
+  const { isConnected } = useAccount()
   
   return (
     <header className="flex h-(--header-height) shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
@@ -130,10 +131,11 @@ export function SiteHeader() {
                               }}
                             >
                               {chain.iconUrl && (
-                                <img
+                                <Image
                                   alt={chain.name ?? 'Chain icon'}
                                   src={chain.iconUrl}
-                                  style={{ width: 16, height: 16 }}
+                                  width={16}
+                                  height={16}
                                 />
                               )}
                             </div>

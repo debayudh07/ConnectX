@@ -115,7 +115,7 @@ export function MaintainerSectionCards() {
               {contributionPercentage}%
             </div>
             <p className="text-xs text-white/60">
-              Of platform's total bounties
+              Of platform&apos;s total bounties
             </p>
           </div>
         </div>

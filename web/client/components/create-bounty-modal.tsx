@@ -4,7 +4,7 @@ import * as React from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
-import { formatUnits, parseEther } from "viem"
+import { parseEther } from "viem"
 import { useAccount } from "wagmi"
 import { toast } from "sonner"
 import { useBountyMarketplace } from "@/contractsABI/contractHooks"
@@ -75,7 +75,7 @@ export function CreateBountyModal({ children, onSuccess }: CreateBountyModalProp
   const [open, setOpen] = React.useState(false)
   const [selectedSkills, setSelectedSkills] = React.useState<string[]>([])
   const [isCreating, setIsCreating] = React.useState(false)
-  const { address, isConnected } = useAccount()
+  const { isConnected } = useAccount()
   const { createBounty } = useBountyMarketplace()
 
   const form = useForm<CreateBountyFormData>({

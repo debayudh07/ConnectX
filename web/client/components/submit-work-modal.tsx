@@ -102,21 +102,23 @@ export function SubmitWorkModal({ bounty, children }: SubmitWorkModalProps) {
       setOpen(false)
       setPrUrl("")
       setDescription("")
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error submitting work:', error)
       
-      if (error?.message?.includes('user rejected')) {
+      const errorMessage = error instanceof Error ? error.message : String(error)
+      
+      if (errorMessage.includes('user rejected')) {
         toast.error('❌ Transaction was rejected by user')
-      } else if (error?.message?.includes('bounty not in claimed state')) {
+      } else if (errorMessage.includes('bounty not in claimed state')) {
         toast.error('⚠️ Bounty is not in claimed state')
-      } else if (error?.message?.includes('only claimer can submit')) {
+      } else if (errorMessage.includes('only claimer can submit')) {
         toast.error('🚫 Only the claimer can submit work for this bounty')
-      } else if (error?.message?.includes('already submitted')) {
+      } else if (errorMessage.includes('already submitted')) {
         toast.error('📝 Work has already been submitted for this bounty')
-      } else if (error?.message?.includes('PR URL required')) {
+      } else if (errorMessage.includes('PR URL required')) {
         toast.error('🔗 PR URL is required')
       } else {
-        toast.error(`❌ Error submitting work: ${error?.message || 'Unknown error'}`)
+        toast.error(`❌ Error submitting work: ${errorMessage || 'Unknown error'}`)
       }
     }
   }
@@ -191,7 +193,7 @@ export function SubmitWorkModal({ bounty, children }: SubmitWorkModalProps) {
                       ) : (
                         <div className="flex items-center gap-1 text-red-600">
                           <IconX className="w-3 h-3" />
-                          Repository doesn't match bounty
+                          Repository doesn&apos;t match bounty
                         </div>
                       )}
                     </>

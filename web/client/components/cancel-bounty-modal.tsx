@@ -50,17 +50,19 @@ export function CancelBountyModal({ bounty, children }: CancelBountyModalProps) 
     try {
       await cancelBounty(bounty.id, reason)
       toast.success("🔄 Bounty cancellation initiated! Processing refund...")
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error cancelling bounty:', error)
       
-      if (error?.message?.includes('user rejected')) {
+      const errorMessage = error instanceof Error ? error.message : String(error)
+      
+      if (errorMessage.includes('user rejected')) {
         toast.error('❌ Transaction was rejected by user')
-      } else if (error?.message?.includes('bounty cannot be cancelled')) {
+      } else if (errorMessage.includes('bounty cannot be cancelled')) {
         toast.error('⚠️ This bounty cannot be cancelled in its current state')
-      } else if (error?.message?.includes('not authorized')) {
+      } else if (errorMessage.includes('not authorized')) {
         toast.error('🚫 Not authorized to cancel this bounty')
       } else {
-        toast.error(`❌ Error cancelling bounty: ${error?.message || 'Unknown error'}`)
+        toast.error(`❌ Error cancelling bounty: ${errorMessage || 'Unknown error'}`)
       }
     }
   }

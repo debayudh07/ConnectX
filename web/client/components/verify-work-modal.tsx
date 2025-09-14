@@ -65,21 +65,23 @@ export function VerifyWorkModal({ bounty, submission, children }: VerifyWorkModa
         await disputeBounty(bounty.id, feedback)
         toast.success("⚠️ Dispute initiated! The work has been flagged for review...")
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error processing verification:', error)
       
-      if (error?.message?.includes('user rejected')) {
+      const errorMessage = error instanceof Error ? error.message : String(error)
+      
+      if (errorMessage.includes('user rejected')) {
         toast.error('❌ Transaction was rejected by user')
-      } else if (error?.message?.includes('bounty not in submitted state')) {
+      } else if (errorMessage.includes('bounty not in submitted state')) {
         toast.error('⚠️ Bounty is not in submitted state')
-      } else if (error?.message?.includes('no submission found')) {
+      } else if (errorMessage.includes('no submission found')) {
         toast.error('📝 No submission found for this bounty')
-      } else if (error?.message?.includes('verification failed')) {
+      } else if (errorMessage.includes('verification failed')) {
         toast.error('❌ Submission verification failed')
-      } else if (error?.message?.includes('not authorized')) {
+      } else if (errorMessage.includes('not authorized')) {
         toast.error('🚫 Not authorized to perform this action')
       } else {
-        toast.error(`❌ Error: ${error?.message || 'Unknown error'}`)
+        toast.error(`❌ Error: ${errorMessage || 'Unknown error'}`)
       }
     }
   }

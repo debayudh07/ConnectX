@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/tabs"
 import { IconExternalLink, IconCode, IconCheck } from "@tabler/icons-react"
 import { SubmitWorkModal } from "@/components/submit-work-modal"
+import { BountyStructure } from "@/contractsABI/contractTypes"
 
 const statusMap = {
   0: { label: "Open", variant: "outline" as const, color: "bg-red-500/20 text-red-200 border-red-400/50" },
@@ -90,7 +91,7 @@ export function DeveloperBountyTable() {
     )
   }
 
-  const renderBountyTable = (bounties: any[], showActions = false) => (
+  const renderBountyTable = (bounties: BountyStructure[], showActions = false) => (
     <Table>
       <TableHeader>
         <TableRow>
