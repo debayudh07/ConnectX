@@ -1593,619 +1593,1459 @@ const BountyMarketplaceABI = [
   ] as const;
 
 const DeveloperReputationABI = [
-  {
-    "inputs": [],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
-  },
-  {
-    "inputs": [],
-    "name": "AccessControlBadConfirmation",
-    "type": "error"
-  },
-  {
-    "inputs": [
-      {"internalType": "address", "name": "account", "type": "address"},
-      {"internalType": "bytes32", "name": "neededRole", "type": "bytes32"}
-    ],
-    "name": "AccessControlUnauthorizedAccount",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "EnforcedPause",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "ExpectedPause",
-    "type": "error"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {"indexed": true, "internalType": "address", "name": "developer", "type": "address"},
-      {"indexed": false, "internalType": "uint256", "name": "newScore", "type": "uint256"},
-      {"indexed": false, "internalType": "int256", "name": "scoreChange", "type": "int256"},
-      {"indexed": false, "internalType": "uint256", "name": "newTier", "type": "uint256"}
-    ],
-    "name": "ReputationUpdated",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {"indexed": true, "internalType": "bytes32", "name": "role", "type": "bytes32"},
-      {"indexed": true, "internalType": "bytes32", "name": "previousAdminRole", "type": "bytes32"},
-      {"indexed": true, "internalType": "bytes32", "name": "newAdminRole", "type": "bytes32"}
-    ],
-    "name": "RoleAdminChanged",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {"indexed": true, "internalType": "bytes32", "name": "role", "type": "bytes32"},
-      {"indexed": true, "internalType": "address", "name": "account", "type": "address"},
-      {"indexed": true, "internalType": "address", "name": "sender", "type": "address"}
-    ],
-    "name": "RoleGranted",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {"indexed": true, "internalType": "bytes32", "name": "role", "type": "bytes32"},
-      {"indexed": true, "internalType": "address", "name": "account", "type": "address"},
-      {"indexed": true, "internalType": "address", "name": "sender", "type": "address"}
-    ],
-    "name": "RoleRevoked",
-    "type": "event"
-  },
-  {
-    "inputs": [],
-    "name": "DEFAULT_ADMIN_ROLE",
-    "outputs": [{"internalType": "bytes32", "name": "", "type": "bytes32"}],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "UPDATER_ROLE",
-    "outputs": [{"internalType": "bytes32", "name": "", "type": "bytes32"}],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{"internalType": "address", "name": "", "type": "address"}],
-    "name": "developerStats",
-    "outputs": [
-      {"internalType": "uint256", "name": "totalScore", "type": "uint256"},
-      {"internalType": "uint256", "name": "bountyCompletions", "type": "uint256"},
-      {"internalType": "uint256", "name": "currentStreak", "type": "uint256"},
-      {"internalType": "uint256", "name": "maxStreak", "type": "uint256"},
-      {"internalType": "uint256", "name": "tier", "type": "uint256"},
-      {"internalType": "uint256", "name": "lastActivityDate", "type": "uint256"}
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{"internalType": "address", "name": "_developer", "type": "address"}],
-    "name": "getDeveloperStats",
-    "outputs": [
-      {
-        "components": [
-          {"internalType": "uint256", "name": "totalScore", "type": "uint256"},
-          {"internalType": "uint256", "name": "bountyCompletions", "type": "uint256"},
-          {"internalType": "uint256", "name": "currentStreak", "type": "uint256"},
-          {"internalType": "uint256", "name": "maxStreak", "type": "uint256"},
-          {"internalType": "uint256", "name": "tier", "type": "uint256"},
-          {"internalType": "uint256", "name": "lastActivityDate", "type": "uint256"}
-        ],
-        "internalType": "struct DeveloperReputation.DeveloperStats",
-        "name": "",
-        "type": "tuple"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{"internalType": "bytes32", "name": "role", "type": "bytes32"}],
-    "name": "getRoleAdmin",
-    "outputs": [{"internalType": "bytes32", "name": "", "type": "bytes32"}],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {"internalType": "address", "name": "_developer", "type": "address"},
-      {"internalType": "string", "name": "_skill", "type": "string"}
-    ],
-    "name": "getSkillScore",
-    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {"internalType": "bytes32", "name": "role", "type": "bytes32"},
-      {"internalType": "address", "name": "account", "type": "address"}
-    ],
-    "name": "grantRole",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {"internalType": "bytes32", "name": "role", "type": "bytes32"},
-      {"internalType": "address", "name": "account", "type": "address"}
-    ],
-    "name": "hasRole",
-    "outputs": [{"internalType": "bool", "name": "", "type": "bool"}],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "pause",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "paused",
-    "outputs": [{"internalType": "bool", "name": "", "type": "bool"}],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {"internalType": "bytes32", "name": "role", "type": "bytes32"},
-      {"internalType": "address", "name": "callerConfirmation", "type": "address"}
-    ],
-    "name": "renounceRole",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {"internalType": "bytes32", "name": "role", "type": "bytes32"},
-      {"internalType": "address", "name": "account", "type": "address"}
-    ],
-    "name": "revokeRole",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {"internalType": "address", "name": "", "type": "address"},
-      {"internalType": "bytes32", "name": "", "type": "bytes32"}
-    ],
-    "name": "skillScores",
-    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{"internalType": "bytes4", "name": "interfaceId", "type": "bytes4"}],
-    "name": "supportsInterface",
-    "outputs": [{"internalType": "bool", "name": "", "type": "bool"}],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "unpause",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {"internalType": "address", "name": "_developer", "type": "address"},
-      {"internalType": "int256", "name": "_scoreChange", "type": "int256"},
-      {"internalType": "string[]", "name": "_skillsUsed", "type": "string[]"}
-    ],
-    "name": "updateReputation",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  }
-] as const;
-
-const DeveloperBadgeABI = [
-  {
-    "inputs": [],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
-  },
-  {
-    "inputs": [],
-    "name": "AccessControlBadConfirmation",
-    "type": "error"
-  },
-  {
-    "inputs": [
-      {"internalType": "address", "name": "account", "type": "address"},
-      {"internalType": "bytes32", "name": "neededRole", "type": "bytes32"}
-    ],
-    "name": "AccessControlUnauthorizedAccount",
-    "type": "error"
-  },
-  {
-    "inputs": [
-      {"internalType": "address", "name": "sender", "type": "address"},
-      {"internalType": "uint256", "name": "tokenId", "type": "uint256"},
-      {"internalType": "address", "name": "owner", "type": "address"}
-    ],
-    "name": "ERC721IncorrectOwner",
-    "type": "error"
-  },
-  {
-    "inputs": [
-      {"internalType": "address", "name": "operator", "type": "address"},
-      {"internalType": "uint256", "name": "tokenId", "type": "uint256"}
-    ],
-    "name": "ERC721InsufficientApproval",
-    "type": "error"
-  },
-  {
-    "inputs": [{"internalType": "address", "name": "approver", "type": "address"}],
-    "name": "ERC721InvalidApprover",
-    "type": "error"
-  },
-  {
-    "inputs": [{"internalType": "address", "name": "operator", "type": "address"}],
-    "name": "ERC721InvalidOperator",
-    "type": "error"
-  },
-  {
-    "inputs": [{"internalType": "address", "name": "owner", "type": "address"}],
-    "name": "ERC721InvalidOwner",
-    "type": "error"
-  },
-  {
-    "inputs": [{"internalType": "address", "name": "receiver", "type": "address"}],
-    "name": "ERC721InvalidReceiver",
-    "type": "error"
-  },
-  {
-    "inputs": [{"internalType": "address", "name": "sender", "type": "address"}],
-    "name": "ERC721InvalidSender",
-    "type": "error"
-  },
-  {
-    "inputs": [{"internalType": "uint256", "name": "tokenId", "type": "uint256"}],
-    "name": "ERC721NonexistentToken",
-    "type": "error"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {"indexed": true, "internalType": "address", "name": "owner", "type": "address"},
-      {"indexed": true, "internalType": "address", "name": "approved", "type": "address"},
-      {"indexed": true, "internalType": "uint256", "name": "tokenId", "type": "uint256"}
-    ],
-    "name": "Approval",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {"indexed": true, "internalType": "address", "name": "owner", "type": "address"},
-      {"indexed": true, "internalType": "address", "name": "operator", "type": "address"},
-      {"indexed": false, "internalType": "bool", "name": "approved", "type": "bool"}
-    ],
-    "name": "ApprovalForAll",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {"indexed": true, "internalType": "uint256", "name": "tokenId", "type": "uint256"},
-      {"indexed": true, "internalType": "address", "name": "recipient", "type": "address"},
-      {"indexed": false, "internalType": "string", "name": "badgeType", "type": "string"},
-      {"indexed": false, "internalType": "uint256", "name": "timestamp", "type": "uint256"}
-    ],
-    "name": "BadgeMinted",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {"indexed": true, "internalType": "bytes32", "name": "role", "type": "bytes32"},
-      {"indexed": true, "internalType": "bytes32", "name": "previousAdminRole", "type": "bytes32"},
-      {"indexed": true, "internalType": "bytes32", "name": "newAdminRole", "type": "bytes32"}
-    ],
-    "name": "RoleAdminChanged",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {"indexed": true, "internalType": "bytes32", "name": "role", "type": "bytes32"},
-      {"indexed": true, "internalType": "address", "name": "account", "type": "address"},
-      {"indexed": true, "internalType": "address", "name": "sender", "type": "address"}
-    ],
-    "name": "RoleGranted",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {"indexed": true, "internalType": "bytes32", "name": "role", "type": "bytes32"},
-      {"indexed": true, "internalType": "address", "name": "account", "type": "address"},
-      {"indexed": true, "internalType": "address", "name": "sender", "type": "address"}
-    ],
-    "name": "RoleRevoked",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {"indexed": true, "internalType": "address", "name": "from", "type": "address"},
-      {"indexed": true, "internalType": "address", "name": "to", "type": "address"},
-      {"indexed": true, "internalType": "uint256", "name": "tokenId", "type": "uint256"}
-    ],
-    "name": "Transfer",
-    "type": "event"
-  },
-  {
-    "inputs": [],
-    "name": "DEFAULT_ADMIN_ROLE",
-    "outputs": [{"internalType": "bytes32", "name": "", "type": "bytes32"}],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "MINTER_ROLE",
-    "outputs": [{"internalType": "bytes32", "name": "", "type": "bytes32"}],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {"internalType": "address", "name": "to", "type": "address"},
-      {"internalType": "uint256", "name": "tokenId", "type": "uint256"}
-    ],
-    "name": "approve",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [{"internalType": "address", "name": "owner", "type": "address"}],
-    "name": "balanceOf",
-    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-    "name": "badges",
-    "outputs": [
-      {"internalType": "uint256", "name": "tokenId", "type": "uint256"},
-      {"internalType": "address", "name": "recipient", "type": "address"},
-      {"internalType": "string", "name": "badgeType", "type": "string"},
-      {"internalType": "string", "name": "metadata", "type": "string"},
-      {"internalType": "uint256", "name": "mintedAt", "type": "uint256"}
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{"internalType": "uint256", "name": "tokenId", "type": "uint256"}],
-    "name": "getApproved",
-    "outputs": [{"internalType": "address", "name": "", "type": "address"}],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{"internalType": "uint256", "name": "_tokenId", "type": "uint256"}],
-    "name": "getBadgeInfo",
-    "outputs": [
-      {
-        "components": [
-          {"internalType": "uint256", "name": "tokenId", "type": "uint256"},
-          {"internalType": "address", "name": "recipient", "type": "address"},
-          {"internalType": "string", "name": "badgeType", "type": "string"},
-          {"internalType": "string", "name": "metadata", "type": "string"},
-          {"internalType": "uint256", "name": "mintedAt", "type": "uint256"}
-        ],
-        "internalType": "struct DeveloperBadge.Badge",
-        "name": "",
-        "type": "tuple"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{"internalType": "bytes32", "name": "role", "type": "bytes32"}],
-    "name": "getRoleAdmin",
-    "outputs": [{"internalType": "bytes32", "name": "", "type": "bytes32"}],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {"internalType": "bytes32", "name": "role", "type": "bytes32"},
-      {"internalType": "address", "name": "account", "type": "address"}
-    ],
-    "name": "grantRole",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {"internalType": "bytes32", "name": "role", "type": "bytes32"},
-      {"internalType": "address", "name": "account", "type": "address"}
-    ],
-    "name": "hasRole",
-    "outputs": [{"internalType": "bool", "name": "", "type": "bool"}],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {"internalType": "address", "name": "owner", "type": "address"},
-      {"internalType": "address", "name": "operator", "type": "address"}
-    ],
-    "name": "isApprovedForAll",
-    "outputs": [{"internalType": "bool", "name": "", "type": "bool"}],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {"internalType": "address", "name": "_recipient", "type": "address"},
-      {"internalType": "string", "name": "_badgeType", "type": "string"},
-      {"internalType": "string", "name": "_metadataURI", "type": "string"}
-    ],
-    "name": "mintBadge",
-    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "name",
-    "outputs": [{"internalType": "string", "name": "", "type": "string"}],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{"internalType": "uint256", "name": "tokenId", "type": "uint256"}],
-    "name": "ownerOf",
-    "outputs": [{"internalType": "address", "name": "", "type": "address"}],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {"internalType": "bytes32", "name": "role", "type": "bytes32"},
-      {"internalType": "address", "name": "callerConfirmation", "type": "address"}
-    ],
-    "name": "renounceRole",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {"internalType": "bytes32", "name": "role", "type": "bytes32"},
-      {"internalType": "address", "name": "account", "type": "address"}
-    ],
-    "name": "revokeRole",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {"internalType": "address", "name": "from", "type": "address"},
-      {"internalType": "address", "name": "to", "type": "address"},
-      {"internalType": "uint256", "name": "tokenId", "type": "uint256"}
-    ],
-    "name": "safeTransferFrom",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {"internalType": "address", "name": "from", "type": "address"},
-      {"internalType": "address", "name": "to", "type": "address"},
-      {"internalType": "uint256", "name": "tokenId", "type": "uint256"},
-      {"internalType": "bytes", "name": "data", "type": "bytes"}
-    ],
-    "name": "safeTransferFrom",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {"internalType": "address", "name": "operator", "type": "address"},
-      {"internalType": "bool", "name": "approved", "type": "bool"}
-    ],
-    "name": "setApprovalForAll",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [{"internalType": "bytes4", "name": "interfaceId", "type": "bytes4"}],
-    "name": "supportsInterface",
-    "outputs": [{"internalType": "bool", "name": "", "type": "bool"}],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "symbol",
-    "outputs": [{"internalType": "string", "name": "", "type": "string"}],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{"internalType": "uint256", "name": "index", "type": "uint256"}],
-    "name": "tokenByIndex",
-    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "tokenCounter",
-    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {"internalType": "address", "name": "owner", "type": "address"},
-      {"internalType": "uint256", "name": "index", "type": "uint256"}
-    ],
-    "name": "tokenOfOwnerByIndex",
-    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{"internalType": "uint256", "name": "tokenId", "type": "uint256"}],
-    "name": "tokenURI",
-    "outputs": [{"internalType": "string", "name": "", "type": "string"}],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "totalSupply",
-    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {"internalType": "address", "name": "from", "type": "address"},
-      {"internalType": "address", "name": "to", "type": "address"},
-      {"internalType": "uint256", "name": "tokenId", "type": "uint256"}
-    ],
-    "name": "transferFrom",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  }
-] as const;
+    {
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [],
+      "name": "AccessControlBadConfirmation",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "neededRole",
+          "type": "bytes32"
+        }
+      ],
+      "name": "AccessControlUnauthorizedAccount",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "ERC721EnumerableForbiddenBatchMint",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        }
+      ],
+      "name": "ERC721IncorrectOwner",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "operator",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "ERC721InsufficientApproval",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "approver",
+          "type": "address"
+        }
+      ],
+      "name": "ERC721InvalidApprover",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "operator",
+          "type": "address"
+        }
+      ],
+      "name": "ERC721InvalidOperator",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        }
+      ],
+      "name": "ERC721InvalidOwner",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "receiver",
+          "type": "address"
+        }
+      ],
+      "name": "ERC721InvalidReceiver",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        }
+      ],
+      "name": "ERC721InvalidSender",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "ERC721NonexistentToken",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "index",
+          "type": "uint256"
+        }
+      ],
+      "name": "ERC721OutOfBoundsIndex",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "value",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "length",
+          "type": "uint256"
+        }
+      ],
+      "name": "StringsInsufficientHexLength",
+      "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "approved",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "Approval",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "operator",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "approved",
+          "type": "bool"
+        }
+      ],
+      "name": "ApprovalForAll",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "developer",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "bountyId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "badgeType",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "achievementName",
+          "type": "string"
+        }
+      ],
+      "name": "BadgeMinted",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        }
+      ],
+      "name": "BadgeTransferred",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_fromTokenId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_toTokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "BatchMetadataUpdate",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "MetadataUpdate",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "previousAdminRole",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "newAdminRole",
+          "type": "bytes32"
+        }
+      ],
+      "name": "RoleAdminChanged",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        }
+      ],
+      "name": "RoleGranted",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        }
+      ],
+      "name": "RoleRevoked",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "Transfer",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "ADMIN_ROLE",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "DEFAULT_ADMIN_ROLE",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "MINTER_ROLE",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "approve",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "badgeMetadata",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "bountyId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "rewardAmount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "githubIssueUrl",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "repositoryUrl",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "difficultyLevel",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "completedAt",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "developer",
+          "type": "address"
+        },
+        {
+          "internalType": "string",
+          "name": "skills",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "badgeType",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "achievementName",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        }
+      ],
+      "name": "balanceOf",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "bountyBadges",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "completionBadges",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "developerBadges",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "developerBadgesByType",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "developer",
+          "type": "address"
+        }
+      ],
+      "name": "getAllDeveloperBadgeDetails",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "bountyId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "rewardAmount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "githubIssueUrl",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "repositoryUrl",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "difficultyLevel",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "completedAt",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "developer",
+              "type": "address"
+            },
+            {
+              "internalType": "string",
+              "name": "skills",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "badgeType",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "achievementName",
+              "type": "string"
+            }
+          ],
+          "internalType": "struct DeveloperBadge.BadgeMetadata[]",
+          "name": "",
+          "type": "tuple[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getApproved",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getBadgeDetails",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "bountyId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "rewardAmount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "githubIssueUrl",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "repositoryUrl",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "difficultyLevel",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "completedAt",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "developer",
+              "type": "address"
+            },
+            {
+              "internalType": "string",
+              "name": "skills",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "badgeType",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "achievementName",
+              "type": "string"
+            }
+          ],
+          "internalType": "struct DeveloperBadge.BadgeMetadata",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "bountyId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getBountyBadges",
+      "outputs": [
+        {
+          "internalType": "uint256[]",
+          "name": "",
+          "type": "uint256[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "developer",
+          "type": "address"
+        }
+      ],
+      "name": "getDeveloperBadgeCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "developer",
+          "type": "address"
+        }
+      ],
+      "name": "getDeveloperBadges",
+      "outputs": [
+        {
+          "internalType": "uint256[]",
+          "name": "",
+          "type": "uint256[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "developer",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "badgeType",
+          "type": "uint256"
+        }
+      ],
+      "name": "getDeveloperBadgesByType",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getRoleAdmin",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getTotalSupply",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "grantRole",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "hasRole",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "operator",
+          "type": "address"
+        }
+      ],
+      "name": "isApprovedForAll",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "developer",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "bountyId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "name": "mintBadge",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "developer",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "bountyId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "rewardAmount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "githubIssueUrl",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "repositoryUrl",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "difficultyLevel",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "skills",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "badgeType",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "achievementName",
+          "type": "string"
+        }
+      ],
+      "name": "mintCustomBadge",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "developer",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "streakCount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "achievementName",
+          "type": "string"
+        }
+      ],
+      "name": "mintStreakBadge",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "name",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "ownerOf",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "callerConfirmation",
+          "type": "address"
+        }
+      ],
+      "name": "renounceRole",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "revokeMinterRole",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "revokeRole",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "safeTransferFrom",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
+        }
+      ],
+      "name": "safeTransferFrom",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "operator",
+          "type": "address"
+        },
+        {
+          "internalType": "bool",
+          "name": "approved",
+          "type": "bool"
+        }
+      ],
+      "name": "setApprovalForAll",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "setMinterRole",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "specialBadges",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "streakBadges",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes4",
+          "name": "interfaceId",
+          "type": "bytes4"
+        }
+      ],
+      "name": "supportsInterface",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "symbol",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "index",
+          "type": "uint256"
+        }
+      ],
+      "name": "tokenByIndex",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "index",
+          "type": "uint256"
+        }
+      ],
+      "name": "tokenOfOwnerByIndex",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "tokenURI",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "totalSupply",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "transferFrom",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "newAchievementName",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "newSkills",
+          "type": "string"
+        }
+      ],
+      "name": "updateBadgeMetadata",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ] as const;
 
 const SimpleBountyVerifierABI = [
   {
@@ -2467,6 +3307,1456 @@ const SimpleBountyVerifierABI = [
   }
 ] as const;
 
+const DeveloperBadgeABI = [
+  {
+    "inputs": [],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "inputs": [],
+    "name": "AccessControlBadConfirmation",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "neededRole",
+        "type": "bytes32"
+      }
+    ],
+    "name": "AccessControlUnauthorizedAccount",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      }
+    ],
+    "name": "ERC721IncorrectOwner",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "operator",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "ERC721InsufficientApproval",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "approver",
+        "type": "address"
+      }
+    ],
+    "name": "ERC721InvalidApprover",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "operator",
+        "type": "address"
+      }
+    ],
+    "name": "ERC721InvalidOperator",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      }
+    ],
+    "name": "ERC721InvalidOwner",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "receiver",
+        "type": "address"
+      }
+    ],
+    "name": "ERC721InvalidReceiver",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
+      }
+    ],
+    "name": "ERC721InvalidSender",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "ERC721NonexistentToken",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "index",
+        "type": "uint256"
+      }
+    ],
+    "name": "ERC721OutOfBoundsIndex",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "value",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "length",
+        "type": "uint256"
+      }
+    ],
+    "name": "StringsInsufficientHexLength",
+    "type": "error"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "approved",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "Approval",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "operator",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "approved",
+        "type": "bool"
+      }
+    ],
+    "name": "ApprovalForAll",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "developer",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "bountyId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "badgeType",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "achievementName",
+        "type": "string"
+      }
+    ],
+    "name": "BadgeMinted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      }
+    ],
+    "name": "BadgeTransferred",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_fromTokenId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_toTokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "BatchMetadataUpdate",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "MetadataUpdate",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "previousAdminRole",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "newAdminRole",
+        "type": "bytes32"
+      }
+    ],
+    "name": "RoleAdminChanged",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
+      }
+    ],
+    "name": "RoleGranted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
+      }
+    ],
+    "name": "RoleRevoked",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "Transfer",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "ADMIN_ROLE",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "DEFAULT_ADMIN_ROLE",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "MINTER_ROLE",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "approve",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "badgeMetadata",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "bountyId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "rewardAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "githubIssueUrl",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "repositoryUrl",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "difficultyLevel",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "completedAt",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "developer",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "skills",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "badgeType",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "achievementName",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      }
+    ],
+    "name": "balanceOf",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "bountyBadges",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "completionBadges",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "developerBadges",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "developerBadgesByType",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "developer",
+        "type": "address"
+      }
+    ],
+    "name": "getAllDeveloperBadgeDetails",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "bountyId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "rewardAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "githubIssueUrl",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "repositoryUrl",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "difficultyLevel",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "completedAt",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "developer",
+            "type": "address"
+          },
+          {
+            "internalType": "string",
+            "name": "skills",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "badgeType",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "achievementName",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct DeveloperBadge.BadgeMetadata[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getApproved",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getBadgeDetails",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "bountyId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "rewardAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "githubIssueUrl",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "repositoryUrl",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "difficultyLevel",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "completedAt",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "developer",
+            "type": "address"
+          },
+          {
+            "internalType": "string",
+            "name": "skills",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "badgeType",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "achievementName",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct DeveloperBadge.BadgeMetadata",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "bountyId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getBountyBadges",
+    "outputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "",
+        "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "developer",
+        "type": "address"
+      }
+    ],
+    "name": "getDeveloperBadgeCount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "developer",
+        "type": "address"
+      }
+    ],
+    "name": "getDeveloperBadges",
+    "outputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "",
+        "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "developer",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "badgeType",
+        "type": "uint256"
+      }
+    ],
+    "name": "getDeveloperBadgesByType",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      }
+    ],
+    "name": "getRoleAdmin",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getTotalSupply",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "grantRole",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "hasRole",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "operator",
+        "type": "address"
+      }
+    ],
+    "name": "isApprovedForAll",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "developer",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "bountyId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "name": "mintBadge",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "developer",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "bountyId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "rewardAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "githubIssueUrl",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "repositoryUrl",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "difficultyLevel",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "skills",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "badgeType",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "achievementName",
+        "type": "string"
+      }
+    ],
+    "name": "mintCustomBadge",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "developer",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "streakCount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "achievementName",
+        "type": "string"
+      }
+    ],
+    "name": "mintStreakBadge",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "name",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "ownerOf",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "address",
+        "name": "callerConfirmation",
+        "type": "address"
+      }
+    ],
+    "name": "renounceRole",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "revokeMinterRole",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "revokeRole",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "safeTransferFrom",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "data",
+        "type": "bytes"
+      }
+    ],
+    "name": "safeTransferFrom",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "operator",
+        "type": "address"
+      },
+      {
+        "internalType": "bool",
+        "name": "approved",
+        "type": "bool"
+      }
+    ],
+    "name": "setApprovalForAll",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "setMinterRole",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "specialBadges",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "streakBadges",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes4",
+        "name": "interfaceId",
+        "type": "bytes4"
+      }
+    ],
+    "name": "supportsInterface",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "symbol",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "index",
+        "type": "uint256"
+      }
+    ],
+    "name": "tokenByIndex",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "index",
+        "type": "uint256"
+      }
+    ],
+    "name": "tokenOfOwnerByIndex",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "tokenURI",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "totalSupply",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "transferFrom",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "newAchievementName",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "newSkills",
+        "type": "string"
+      }
+    ],
+    "name": "updateBadgeMetadata",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+] as const;
+
 // Bounty Marketplace Hooks
 export const useBountyMarketplace = () => {
   const { writeContract, data: hash, isPending, error } = useWriteContract();
@@ -2516,11 +4806,74 @@ export const useBountyMarketplace = () => {
   };
 
   const verifyAndPayBounty = async (bountyId: bigint) => {
+    try {
+      console.log('🚀 Executing verifyAndPayBounty with enhanced validation...', { bountyId });
+      
+      return writeContract({
+        address: CONTRACT_ADDRESSES.BOUNTY_MARKETPLACE,
+        abi: BountyMarketplaceABI,
+        functionName: 'verifyAndPayBounty',
+        args: [bountyId]
+      });
+    } catch (error: any) {
+      console.error('💥 verifyAndPayBounty error:', error);
+      
+      // Enhanced error handling based on our comprehensive tests
+      const errorMessage = error?.message || error?.shortMessage || String(error);
+      
+      if (errorMessage.includes('bounty does not exist')) {
+        throw new Error('Bounty not found. Please verify the bounty ID is correct.');
+      } else if (errorMessage.includes('bounty not in submitted state')) {
+        throw new Error('Bounty is not in submitted state. Only submitted bounties can be verified.');
+      } else if (errorMessage.includes('no submission found')) {
+        throw new Error('No submission found for this bounty. Developer must submit work first.');
+      } else if (errorMessage.includes('submission verification failed')) {
+        throw new Error('Submission verification failed. The work does not meet the requirements.');
+      } else if (errorMessage.includes('caller is not a verifier or admin')) {
+        throw new Error('Access denied: You need VERIFIER_ROLE or ADMIN_ROLE to verify bounties.');
+      } else if (errorMessage.includes('EnforcedPause') || errorMessage.includes('paused')) {
+        throw new Error('Contract is currently paused. Please try again later.');
+      } else if (errorMessage.includes('ReentrancyGuard') || errorMessage.includes('reentrancy')) {
+        throw new Error('Reentrancy detected. Transaction blocked for security reasons.');
+      } else if (errorMessage.includes('developer payment failed')) {
+        throw new Error('Payment transfer to developer failed. Please check recipient address.');
+      } else if (errorMessage.includes('platform fee payment failed')) {
+        throw new Error('Platform fee transfer failed. Please contact support.');
+      } else if (errorMessage.includes('user rejected')) {
+        throw new Error('Transaction was rejected by user.');
+      } else if (errorMessage.includes('insufficient funds')) {
+        throw new Error('Insufficient funds to complete the transaction.');
+      } else if (errorMessage.includes('gas')) {
+        throw new Error('Gas estimation failed. Please try again with higher gas limit.');
+      } else {
+        // Generic error with original message
+        throw new Error(`Verification failed: ${errorMessage}`);
+      }
+    }
+  };
+
+  // Add role management functions
+  const grantVerifierRole = async (account: `0x${string}`) => {
     return writeContract({
       address: CONTRACT_ADDRESSES.BOUNTY_MARKETPLACE,
       abi: BountyMarketplaceABI,
-      functionName: 'verifyAndPayBounty',
-      args: [bountyId]
+      functionName: 'grantRole',
+      args: [
+        '0x9f2df0fed2c77648de5860a4cc508cd0818c85b8b8a1ab4ceeef8d981c8956a6' as `0x${string}`, // VERIFIER_ROLE
+        account
+      ]
+    });
+  };
+
+  const grantMaintainerRole = async (account: `0x${string}`) => {
+    return writeContract({
+      address: CONTRACT_ADDRESSES.BOUNTY_MARKETPLACE,
+      abi: BountyMarketplaceABI,
+      functionName: 'grantRole',
+      args: [
+        '0x46925e0f0cc76e485772167edccb8dc449d43b23b55fc4e756b063f49099e6a0' as `0x${string}`, // MAINTAINER_ROLE
+        account
+      ]
     });
   };
 
@@ -2548,6 +4901,8 @@ export const useBountyMarketplace = () => {
     cancelBounty,
     submitWork,
     verifyAndPayBounty,
+    grantVerifierRole,
+    grantMaintainerRole,
     disputeBounty,
     resolveBountyDispute,
     hash,
@@ -2793,6 +5148,44 @@ export const useHasRole = (role: `0x${string}`, account: `0x${string}`) => {
   };
 };
 
+// Hook to check if user can verify bounties
+export const useCanVerifyBounties = (account: `0x${string}`) => {
+  const VERIFIER_ROLE = '0x9f2df0fed2c77648de5860a4cc508cd0818c85b8b8a1ab4ceeef8d981c8956a6' as `0x${string}`;
+  const ADMIN_ROLE = '0xa49807205ce4d355092ef5a8a18f56e8913cf4a201fbe287825b095693c21775' as `0x${string}`;
+  
+  const { data: hasVerifierRole, isLoading: verifierLoading, error: verifierError } = useReadContract({
+    address: CONTRACT_ADDRESSES.BOUNTY_MARKETPLACE,
+    abi: BountyMarketplaceABI,
+    functionName: 'hasRole',
+    args: [VERIFIER_ROLE, account],
+    query: {
+      enabled: !!account
+    }
+  });
+
+  const { data: hasAdminRole, isLoading: adminLoading, error: adminError } = useReadContract({
+    address: CONTRACT_ADDRESSES.BOUNTY_MARKETPLACE,
+    abi: BountyMarketplaceABI,
+    functionName: 'hasRole',
+    args: [ADMIN_ROLE, account],
+    query: {
+      enabled: !!account
+    }
+  });
+
+  const canVerify = Boolean(hasVerifierRole || hasAdminRole);
+  const isLoading = verifierLoading || adminLoading;
+  const error = verifierError || adminError;
+
+  return {
+    canVerify,
+    hasVerifierRole: Boolean(hasVerifierRole),
+    hasAdminRole: Boolean(hasAdminRole),
+    isLoading,
+    error
+  };
+};
+
 export const useHasSubmitted = (bountyId: bigint, developer: `0x${string}`) => {
   const { data: hasSubmitted, isLoading, error } = useReadContract({
     address: CONTRACT_ADDRESSES.BOUNTY_MARKETPLACE,
@@ -2812,17 +5205,17 @@ export const useHasSubmitted = (bountyId: bigint, developer: `0x${string}`) => {
 export const useDeveloperReputation = () => {
   const { writeContract, data: hash, isPending, error } = useWriteContract();
 
-  const updateReputation = async (params: UpdateReputationParams) => {
+  const mintBadge = async (params: { developer: `0x${string}`, bountyId: bigint, metadataURI: string }) => {
     return writeContract({
       address: CONTRACT_ADDRESSES.DEVELOPER_REPUTATION,
       abi: DeveloperReputationABI,
-      functionName: 'updateReputation',
-      args: [params.developer, params.scoreChange, params.skillsUsed]
+      functionName: 'mintBadge',
+      args: [params.developer, params.bountyId, params.metadataURI]
     });
   };
 
   return {
-    updateReputation,
+    mintBadge,
     hash,
     isPending,
     error
@@ -2830,25 +5223,26 @@ export const useDeveloperReputation = () => {
 };
 
 export const useReputationData = (developer: `0x${string}`) => {
-  const { data: stats, isLoading, error } = useReadContract({
-    address: CONTRACT_ADDRESSES.DEVELOPER_REPUTATION,
-    abi: DeveloperReputationABI,
-    functionName: 'getDeveloperStats',
+  // Use balanceOf instead of getDeveloperBadgeCount for compatibility
+  const { data: badgeCount, isLoading: badgeCountLoading, error: badgeCountError } = useReadContract({
+    address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
+    abi: DeveloperBadgeABI,
+    functionName: 'balanceOf',
     args: [developer]
-  }) as { data: DeveloperStats | undefined, isLoading: boolean, error: Error | null };
+  });
 
-  const { data: skillScore } = useReadContract({
-    address: CONTRACT_ADDRESSES.DEVELOPER_REPUTATION,
-    abi: DeveloperReputationABI,
-    functionName: 'getSkillScore',
-    args: [developer, 'javascript'] // Example skill
+  // Get total supply since getAllDeveloperBadgeDetails doesn't exist in minimal contract
+  const { data: totalSupply, isLoading: totalSupplyLoading, error: totalSupplyError } = useReadContract({
+    address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
+    abi: DeveloperBadgeABI,
+    functionName: 'totalSupply'
   });
 
   return {
-    stats,
-    skillScore,
-    isLoading,
-    error
+    badgeCount,
+    totalSupply, // Return totalSupply instead of allBadges
+    isLoading: badgeCountLoading || totalSupplyLoading,
+    error: badgeCountError || totalSupplyError
   };
 };
 
@@ -2856,12 +5250,12 @@ export const useReputationData = (developer: `0x${string}`) => {
 export const useDeveloperBadge = () => {
   const { writeContract, data: hash, isPending, error } = useWriteContract();
 
-  const mintBadge = async (params: MintBadgeParams) => {
+  const mintBadge = async (params: { developer: `0x${string}`, bountyId: bigint, metadataURI: string }) => {
     return writeContract({
       address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
       abi: DeveloperBadgeABI,
       functionName: 'mintBadge',
-      args: [params.recipient, params.badgeType, params.metadataURI]
+      args: [params.developer, params.bountyId, params.metadataURI]
     });
   };
 
@@ -2874,12 +5268,13 @@ export const useDeveloperBadge = () => {
 };
 
 export const useBadgeData = (tokenId: bigint) => {
-  const { data: badge, isLoading, error } = useReadContract({
+  // Use tokenURI instead of getBadgeDetails since getBadgeDetails doesn't exist in minimal contract
+  const { data: tokenURI, isLoading, error } = useReadContract({
     address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
     abi: DeveloperBadgeABI,
-    functionName: 'getBadgeInfo',
+    functionName: 'tokenURI',
     args: [tokenId]
-  }) as { data: BadgeInfo | undefined, isLoading: boolean, error: Error | null };
+  }) as { data: string | undefined, isLoading: boolean, error: Error | null };
 
   const { data: totalSupply } = useReadContract({
     address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
@@ -2888,8 +5283,518 @@ export const useBadgeData = (tokenId: bigint) => {
   });
 
   return {
-    badge,
+    tokenURI, // Return tokenURI instead of badge
     totalSupply,
+    isLoading,
+    error
+  };
+};
+
+// Enhanced Developer Badge Hooks
+export const useDeveloperBadgeRead = () => {
+  // Hook for reading badge data by token ID
+  const getBadgeDetails = (tokenId: bigint) => {
+    const { data, isLoading, error } = useReadContract({
+      address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
+      abi: DeveloperBadgeABI,
+      functionName: 'getBadgeDetails',
+      args: [tokenId]
+    });
+    return { data, isLoading, error };
+  };
+
+  // Hook for getting all developer badges
+  const getAllDeveloperBadgeDetails = (developer: `0x${string}`) => {
+    const { data, isLoading, error } = useReadContract({
+      address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
+      abi: DeveloperBadgeABI,
+      functionName: 'getAllDeveloperBadgeDetails',
+      args: [developer]
+    });
+    return { data, isLoading, error };
+  };
+
+  // Hook for getting developer badge count
+  const getDeveloperBadgeCount = (developer: `0x${string}`) => {
+    const { data, isLoading, error } = useReadContract({
+      address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
+      abi: DeveloperBadgeABI,
+      functionName: 'getDeveloperBadgeCount',
+      args: [developer]
+    });
+    return { data, isLoading, error };
+  };
+
+  // Hook for getting developer badges
+  const getDeveloperBadges = (developer: `0x${string}`) => {
+    const { data, isLoading, error } = useReadContract({
+      address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
+      abi: DeveloperBadgeABI,
+      functionName: 'getDeveloperBadges',
+      args: [developer]
+    });
+    return { data, isLoading, error };
+  };
+
+  // Hook for getting developer badges by type
+  const getDeveloperBadgesByType = (developer: `0x${string}`, badgeType: bigint) => {
+    const { data, isLoading, error } = useReadContract({
+      address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
+      abi: DeveloperBadgeABI,
+      functionName: 'getDeveloperBadgesByType',
+      args: [developer, badgeType]
+    });
+    return { data, isLoading, error };
+  };
+
+  // Hook for getting bounty badges
+  const getBountyBadges = (bountyId: bigint) => {
+    const { data, isLoading, error } = useReadContract({
+      address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
+      abi: DeveloperBadgeABI,
+      functionName: 'getBountyBadges',
+      args: [bountyId]
+    });
+    return { data, isLoading, error };
+  };
+
+  // Hook for getting total supply
+  const getTotalSupply = () => {
+    const { data, isLoading, error } = useReadContract({
+      address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
+      abi: DeveloperBadgeABI,
+      functionName: 'getTotalSupply'
+    });
+    return { data, isLoading, error };
+  };
+
+  // Hook for getting badge metadata
+  const getBadgeMetadata = (tokenId: bigint) => {
+    const { data, isLoading, error } = useReadContract({
+      address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
+      abi: DeveloperBadgeABI,
+      functionName: 'badgeMetadata',
+      args: [tokenId]
+    });
+    return { data, isLoading, error };
+  };
+
+  // Standard ERC721 read functions
+  const balanceOf = (owner: `0x${string}`) => {
+    const { data, isLoading, error } = useReadContract({
+      address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
+      abi: DeveloperBadgeABI,
+      functionName: 'balanceOf',
+      args: [owner]
+    });
+    return { data, isLoading, error };
+  };
+
+  const ownerOf = (tokenId: bigint) => {
+    const { data, isLoading, error } = useReadContract({
+      address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
+      abi: DeveloperBadgeABI,
+      functionName: 'ownerOf',
+      args: [tokenId]
+    });
+    return { data, isLoading, error };
+  };
+
+  const getApproved = (tokenId: bigint) => {
+    const { data, isLoading, error } = useReadContract({
+      address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
+      abi: DeveloperBadgeABI,
+      functionName: 'getApproved',
+      args: [tokenId]
+    });
+    return { data, isLoading, error };
+  };
+
+  const isApprovedForAll = (owner: `0x${string}`, operator: `0x${string}`) => {
+    const { data, isLoading, error } = useReadContract({
+      address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
+      abi: DeveloperBadgeABI,
+      functionName: 'isApprovedForAll',
+      args: [owner, operator]
+    });
+    return { data, isLoading, error };
+  };
+
+  const tokenURI = (tokenId: bigint) => {
+    const { data, isLoading, error } = useReadContract({
+      address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
+      abi: DeveloperBadgeABI,
+      functionName: 'tokenURI',
+      args: [tokenId]
+    });
+    return { data, isLoading, error };
+  };
+
+  const name = () => {
+    const { data, isLoading, error } = useReadContract({
+      address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
+      abi: DeveloperBadgeABI,
+      functionName: 'name'
+    });
+    return { data, isLoading, error };
+  };
+
+  const symbol = () => {
+    const { data, isLoading, error } = useReadContract({
+      address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
+      abi: DeveloperBadgeABI,
+      functionName: 'symbol'
+    });
+    return { data, isLoading, error };
+  };
+
+  const totalSupply = () => {
+    const { data, isLoading, error } = useReadContract({
+      address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
+      abi: DeveloperBadgeABI,
+      functionName: 'totalSupply'
+    });
+    return { data, isLoading, error };
+  };
+
+  const tokenByIndex = (index: bigint) => {
+    const { data, isLoading, error } = useReadContract({
+      address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
+      abi: DeveloperBadgeABI,
+      functionName: 'tokenByIndex',
+      args: [index]
+    });
+    return { data, isLoading, error };
+  };
+
+  const tokenOfOwnerByIndex = (owner: `0x${string}`, index: bigint) => {
+    const { data, isLoading, error } = useReadContract({
+      address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
+      abi: DeveloperBadgeABI,
+      functionName: 'tokenOfOwnerByIndex',
+      args: [owner, index]
+    });
+    return { data, isLoading, error };
+  };
+
+  // Role-based functions
+  const hasRole = (role: `0x${string}`, account: `0x${string}`) => {
+    const { data, isLoading, error } = useReadContract({
+      address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
+      abi: DeveloperBadgeABI,
+      functionName: 'hasRole',
+      args: [role, account]
+    });
+    return { data, isLoading, error };
+  };
+
+  const getRoleAdmin = (role: `0x${string}`) => {
+    const { data, isLoading, error } = useReadContract({
+      address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
+      abi: DeveloperBadgeABI,
+      functionName: 'getRoleAdmin',
+      args: [role]
+    });
+    return { data, isLoading, error };
+  };
+
+  // Role constants
+  const DEFAULT_ADMIN_ROLE = () => {
+    const { data, isLoading, error } = useReadContract({
+      address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
+      abi: DeveloperBadgeABI,
+      functionName: 'DEFAULT_ADMIN_ROLE'
+    });
+    return { data, isLoading, error };
+  };
+
+  const ADMIN_ROLE = () => {
+    const { data, isLoading, error } = useReadContract({
+      address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
+      abi: DeveloperBadgeABI,
+      functionName: 'ADMIN_ROLE'
+    });
+    return { data, isLoading, error };
+  };
+
+  const MINTER_ROLE = () => {
+    const { data, isLoading, error } = useReadContract({
+      address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
+      abi: DeveloperBadgeABI,
+      functionName: 'MINTER_ROLE'
+    });
+    return { data, isLoading, error };
+  };
+
+  return {
+    getBadgeDetails,
+    getAllDeveloperBadgeDetails,
+    getDeveloperBadgeCount,
+    getDeveloperBadges,
+    getDeveloperBadgesByType,
+    getBountyBadges,
+    getTotalSupply,
+    getBadgeMetadata,
+    balanceOf,
+    ownerOf,
+    getApproved,
+    isApprovedForAll,
+    tokenURI,
+    name,
+    symbol,
+    totalSupply,
+    tokenByIndex,
+    tokenOfOwnerByIndex,
+    hasRole,
+    getRoleAdmin,
+    DEFAULT_ADMIN_ROLE,
+    ADMIN_ROLE,
+    MINTER_ROLE
+  };
+};
+
+export const useDeveloperBadgeWrite = () => {
+  const { writeContract, data: hash, isPending, error } = useWriteContract();
+
+  // Minting functions
+  const mintBadge = async (developer: `0x${string}`, bountyId: bigint, metadataURI: string) => {
+    return writeContract({
+      address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
+      abi: DeveloperBadgeABI,
+      functionName: 'mintBadge',
+      args: [developer, bountyId, metadataURI]
+    });
+  };
+
+  const mintCustomBadge = async (
+    developer: `0x${string}`,
+    bountyId: bigint,
+    rewardAmount: bigint,
+    githubIssueUrl: string,
+    repositoryUrl: string,
+    difficultyLevel: bigint,
+    skills: string,
+    badgeType: bigint,
+    achievementName: string
+  ) => {
+    return writeContract({
+      address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
+      abi: DeveloperBadgeABI,
+      functionName: 'mintCustomBadge',
+      args: [developer, bountyId, rewardAmount, githubIssueUrl, repositoryUrl, difficultyLevel, skills, badgeType, achievementName]
+    });
+  };
+
+  const mintStreakBadge = async (developer: `0x${string}`, streakCount: bigint, achievementName: string) => {
+    return writeContract({
+      address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
+      abi: DeveloperBadgeABI,
+      functionName: 'mintStreakBadge',
+      args: [developer, streakCount, achievementName]
+    });
+  };
+
+  // Transfer functions
+  const transferFrom = async (from: `0x${string}`, to: `0x${string}`, tokenId: bigint) => {
+    return writeContract({
+      address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
+      abi: DeveloperBadgeABI,
+      functionName: 'transferFrom',
+      args: [from, to, tokenId]
+    });
+  };
+
+  const safeTransferFrom = async (from: `0x${string}`, to: `0x${string}`, tokenId: bigint, data?: `0x${string}`) => {
+    if (data) {
+      return writeContract({
+        address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
+        abi: DeveloperBadgeABI,
+        functionName: 'safeTransferFrom',
+        args: [from, to, tokenId, data]
+      });
+    } else {
+      return writeContract({
+        address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
+        abi: DeveloperBadgeABI,
+        functionName: 'safeTransferFrom',
+        args: [from, to, tokenId]
+      });
+    }
+  };
+
+  // Approval functions
+  const approve = async (to: `0x${string}`, tokenId: bigint) => {
+    return writeContract({
+      address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
+      abi: DeveloperBadgeABI,
+      functionName: 'approve',
+      args: [to, tokenId]
+    });
+  };
+
+  const setApprovalForAll = async (operator: `0x${string}`, approved: boolean) => {
+    return writeContract({
+      address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
+      abi: DeveloperBadgeABI,
+      functionName: 'setApprovalForAll',
+      args: [operator, approved]
+    });
+  };
+
+  // Role management functions
+  const grantRole = async (role: `0x${string}`, account: `0x${string}`) => {
+    return writeContract({
+      address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
+      abi: DeveloperBadgeABI,
+      functionName: 'grantRole',
+      args: [role, account]
+    });
+  };
+
+  const revokeRole = async (role: `0x${string}`, account: `0x${string}`) => {
+    return writeContract({
+      address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
+      abi: DeveloperBadgeABI,
+      functionName: 'revokeRole',
+      args: [role, account]
+    });
+  };
+
+  const renounceRole = async (role: `0x${string}`, callerConfirmation: `0x${string}`) => {
+    return writeContract({
+      address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
+      abi: DeveloperBadgeABI,
+      functionName: 'renounceRole',
+      args: [role, callerConfirmation]
+    });
+  };
+
+  const setMinterRole = async (account: `0x${string}`) => {
+    return writeContract({
+      address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
+      abi: DeveloperBadgeABI,
+      functionName: 'setMinterRole',
+      args: [account]
+    });
+  };
+
+  const revokeMinterRole = async (account: `0x${string}`) => {
+    return writeContract({
+      address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
+      abi: DeveloperBadgeABI,
+      functionName: 'revokeMinterRole',
+      args: [account]
+    });
+  };
+
+  // Metadata update function
+  const updateBadgeMetadata = async (tokenId: bigint, newAchievementName: string, newSkills: string) => {
+    return writeContract({
+      address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
+      abi: DeveloperBadgeABI,
+      functionName: 'updateBadgeMetadata',
+      args: [tokenId, newAchievementName, newSkills]
+    });
+  };
+
+  return {
+    mintBadge,
+    mintCustomBadge,
+    mintStreakBadge,
+    transferFrom,
+    safeTransferFrom,
+    approve,
+    setApprovalForAll,
+    grantRole,
+    revokeRole,
+    renounceRole,
+    setMinterRole,
+    revokeMinterRole,
+    updateBadgeMetadata,
+    hash,
+    isPending,
+    error
+  };
+};
+
+// Convenient combined hook for developer badge operations
+export const useDeveloperBadgeOperations = () => {
+  const readOperations = useDeveloperBadgeRead();
+  const writeOperations = useDeveloperBadgeWrite();
+
+  return {
+    ...readOperations,
+    ...writeOperations
+  };
+};
+
+// Hook for specific developer badge queries
+export const useDeveloperBadgeQueries = (developer: `0x${string}`) => {
+  const { data: badgeCount, isLoading: countLoading, error: countError } = useReadContract({
+    address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
+    abi: DeveloperBadgeABI,
+    functionName: 'getDeveloperBadgeCount',
+    args: [developer]
+  });
+
+  const { data: allBadges, isLoading: badgesLoading, error: badgesError } = useReadContract({
+    address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
+    abi: DeveloperBadgeABI,
+    functionName: 'getAllDeveloperBadgeDetails',
+    args: [developer]
+  });
+
+  const { data: developerBadges, isLoading: developerBadgesLoading, error: developerBadgesError } = useReadContract({
+    address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
+    abi: DeveloperBadgeABI,
+    functionName: 'getDeveloperBadges',
+    args: [developer]
+  });
+
+  const { data: balance, isLoading: balanceLoading, error: balanceError } = useReadContract({
+    address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
+    abi: DeveloperBadgeABI,
+    functionName: 'balanceOf',
+    args: [developer]
+  });
+
+  return {
+    badgeCount,
+    allBadges,
+    developerBadges,
+    balance,
+    isLoading: countLoading || badgesLoading || developerBadgesLoading || balanceLoading,
+    error: countError || badgesError || developerBadgesError || balanceError
+  };
+};
+
+// Hook for badge type specific queries
+export const useBadgeTypeQueries = (developer: `0x${string}`, badgeType: bigint) => {
+  const { data: badgesByType, isLoading, error } = useReadContract({
+    address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
+    abi: DeveloperBadgeABI,
+    functionName: 'getDeveloperBadgesByType',
+    args: [developer, badgeType]
+  });
+
+  return {
+    badgesByType,
+    isLoading,
+    error
+  };
+};
+
+// Hook for bounty specific badge queries
+export const useBountyBadgeQueries = (bountyId: bigint) => {
+  const { data: bountyBadges, isLoading, error } = useReadContract({
+    address: CONTRACT_ADDRESSES.DEVELOPER_BADGE,
+    abi: DeveloperBadgeABI,
+    functionName: 'getBountyBadges',
+    args: [bountyId]
+  });
+
+  return {
+    bountyBadges,
     isLoading,
     error
   };
@@ -3113,7 +6018,7 @@ export const useRoleConstants = () => {
     abi: BountyMarketplaceABI,
     functionName: 'MAINTAINER_ROLE'
   });
-
+ 
   const { data: verifierRole } = useReadContract({
     address: CONTRACT_ADDRESSES.BOUNTY_MARKETPLACE,
     abi: BountyMarketplaceABI,
@@ -3177,11 +6082,29 @@ export default {
   useReputationData,
   useDeveloperBadge,
   useBadgeData,
+  // New Enhanced Developer Badge Hooks
+  useDeveloperBadgeRead,
+  useDeveloperBadgeWrite,
+  useDeveloperBadgeOperations,
+  useDeveloperBadgeQueries,
+  useBadgeTypeQueries,
+  useBountyBadgeQueries,
+  // Existing hooks
   useBountyVerifier,
   useSubmissionData,
   useTransactionStatus,
   useConnectXData,
   useBountyMarketplaceAdmin,
   useRoleConstants,
-  useContractReferences
+  useContractReferences,
+  // New Role Management Hooks
+  useCanVerifyBounties
 };
+
+// Role Constants for easy access
+export const ROLE_CONSTANTS = {
+  DEFAULT_ADMIN_ROLE: '0x0000000000000000000000000000000000000000000000000000000000000000',
+  ADMIN_ROLE: '0xa49807205ce4d355092ef5a8a18f56e8913cf4a201fbe287825b095693c21775',
+  MAINTAINER_ROLE: '0x46925e0f0cc76e485772167edccb8dc449d43b23b55fc4e756b063f49099e6a0',
+  VERIFIER_ROLE: '0x9f2df0fed2c77648de5860a4cc508cd0818c85b8b8a1ab4ceeef8d981c8956a6'
+} as const;

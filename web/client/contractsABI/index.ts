@@ -28,7 +28,7 @@ export const CONTRACT_FILES = {
 export const DEPLOYED_CONTRACTS = {
   bountyMarketplace: '0x5b3f1e6047Cd8e0ab83b795e682F6Fe8090c0cca',
   developerReputation: '0xa214C70f0352315ebD22656Fbc755D44473e80f6',
-  developerBadge: '0x04CE909c5688D63C3cB4b7381D367d4bfe5992Be',
+  developerBadge: '0x6F0E57ec6b55F13f64E328c691319dDD3924aE98',
   simpleBountyVerifier: '0x7c4250160BCC04e07D883424d3D07D925bC40D12'
 } as const;
 

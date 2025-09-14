@@ -3,6 +3,7 @@
 import { AppSidebar } from "@/components/app-sidebar"
 import { DeveloperSectionCards } from "@/components/developer-section-cards"
 import { DeveloperBountyTable } from "@/components/developer-bounty-table"
+import { DeveloperBadgeSection } from "@/components/developer-badge-section"
 import { SiteHeader } from "@/components/site-header"
 import {
   SidebarInset,
@@ -27,6 +28,9 @@ export default function DeveloperDashboard() {
             <div className="@container/main flex flex-1 flex-col gap-2 bg-black">
               <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6 bg-black">
                 <DeveloperSectionCards />
+                <div className="px-4 lg:px-6 bg-black">
+                  <DeveloperBadgeSection />
+                </div>
                 <div className="px-4 lg:px-6 bg-black">
                   <DeveloperBountyTable />
                 </div>

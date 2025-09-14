@@ -13,6 +13,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { VerifyWorkModal } from '@/components/verify-work-modal';
 import { CancelBountyModal } from '@/components/cancel-bounty-modal';
+import { VerifierButton } from '@/components/verifier-button';
+import { VerifyButtonWrapper } from '@/components/verify-button-wrapper';
 import { IconCheck, IconX, IconExternalLink, IconClock, IconAlertTriangle } from '@tabler/icons-react';
 
 export function MaintainerBountyTable() {
@@ -80,15 +82,18 @@ export function MaintainerBountyTable() {
       <div className="p-6">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-lg font-medium">Your Bounties</h3>
-          <a
-            href="/bounties/create-bounties"
-            className="inline-flex items-center space-x-2 bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/80 transition-colors text-sm"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>
-            <span>New Bounty</span>
-          </a>
+          <div className="flex items-center space-x-3">
+            <VerifierButton />
+            <a
+              href="/bounties/create-bounties"
+              className="inline-flex items-center space-x-2 bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/80 transition-colors text-sm"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              </svg>
+              <span>New Bounty</span>
+            </a>
+          </div>
         </div>
         <div className="space-y-4">
           {bountyIds.map((bountyId) => (
@@ -267,12 +272,14 @@ function MaintainerBountyCard({ bountyId }: { bountyId: bigint }) {
                       
                       {/* Verification Action Button */}
                       {!submission.isVerified && bounty.status === BOUNTY_STATUS.SUBMITTED && (
-                        <VerifyWorkModal bounty={bounty} submission={submission}>
-                          <Button size="sm" className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600">
-                            <IconCheck className="w-3 h-3 mr-1" />
-                            Review
-                          </Button>
-                        </VerifyWorkModal>
+                        <VerifyButtonWrapper>
+                          <VerifyWorkModal bounty={bounty} submission={submission}>
+                            <Button size="sm" className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600">
+                              <IconCheck className="w-3 h-3 mr-1" />
+                              Review
+                            </Button>
+                          </VerifyWorkModal>
+                        </VerifyButtonWrapper>
                       )}
                     </div>
                   </div>
@@ -329,12 +336,14 @@ function MaintainerBountyCard({ bountyId }: { bountyId: bigint }) {
 
             {/* Quick Verify Button for Submitted Work */}
             {bounty.status === BOUNTY_STATUS.SUBMITTED && submissions && submissions.length > 0 && (
-              <VerifyWorkModal bounty={bounty} submission={submissions[0]}>
-                <Button size="sm" className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600">
-                  <IconCheck className="w-3 h-3 mr-1" />
-                  Review Work
-                </Button>
-              </VerifyWorkModal>
+              <VerifyButtonWrapper>
+                <VerifyWorkModal bounty={bounty} submission={submissions[0]}>
+                  <Button size="sm" className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600">
+                    <IconCheck className="w-3 h-3 mr-1" />
+                    Review Work
+                  </Button>
+                </VerifyWorkModal>
+              </VerifyButtonWrapper>
             )}
           </div>
         </div>

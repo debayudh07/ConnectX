@@ -1,122 +1,127 @@
 ﻿"use client"
 
-import { IconTrendingUp, IconCoin, IconCode, IconTrophy, IconUsers } from "@tabler/icons-react"
-import { useTotalBounties, useAllBounties } from "@/contractsABI/contractHooks"
+import * as React from "react"
+import { IconActivity, IconCoins, IconBadge, IconTarget, IconAward } from "@tabler/icons-react"
 import { formatEther } from "viem"
+import {
+  usePlatformFeePercentage,
+  useMinimumBountyAmount,
+  useIsPaused,
+  useDeveloperBadgeQueries
+} from "@/contractsABI/contractHooks"
 
 import { Badge } from "@/components/ui/badge"
 import {
   Card,
-  CardAction,
-  CardDescription,
-  CardFooter,
+  CardContent,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
 
 export function SectionCards() {
-  const { totalBounties, isLoading: loadingTotal } = useTotalBounties()
-  const { bounties, isLoading: loadingBounties } = useAllBounties()
+  // Platform configuration and status
+  const { feePercentage } = usePlatformFeePercentage()
+  const { minimumAmount } = useMinimumBountyAmount()
+  const { isPaused } = useIsPaused()
+  
+  // Mock developer address for getting badge stats
+  const mockAddress = "0x0000000000000000000000000000000000000000" as `0x${string}`
+  const { badgeCount: totalBadges } = useDeveloperBadgeQueries(mockAddress)
 
-  // Calculate metrics from bounty data
-  const totalRewards = bounties?.reduce((acc, bounty) => acc + bounty.rewardAmount, BigInt(0)) || BigInt(0)
-  const activeBounties = bounties?.filter(bounty => bounty.status === 0).length || 0
-  const completedBounties = bounties?.filter(bounty => bounty.status === 4).length || 0
-  const uniqueDevelopers = new Set(bounties?.filter(bounty => bounty.claimedBy !== '0x0000000000000000000000000000000000000000').map(bounty => bounty.claimedBy)).size
+  // Platform metrics
+  const platformData = [
+    {
+      title: "Platform Status",
+      value: isPaused ? "Paused" : "Active",
+      description: isPaused ? "Platform operations paused" : "Platform running normally",
+      icon: IconActivity,
+      status: isPaused ? "warning" : "success"
+    },
+    {
+      title: "Platform Fee",
+      value: feePercentage ? `${Number(feePercentage) / 100}%` : "Loading...",
+      description: "Fee charged on bounty payments",
+      icon: IconCoins,
+      status: "neutral"
+    },
+    {
+      title: "Badge System",
+      value: "Active",
+      description: "Developer achievement system",
+      icon: IconBadge,
+      status: "success"
+    },
+    {
+      title: "Total Badges",
+      value: totalBadges?.toString() || "0",
+      description: "Badges earned by developers",
+      icon: IconAward,
+      status: "success"
+    },
+    {
+      title: "Min Bounty",
+      value: minimumAmount ? `${formatEther(minimumAmount)} ETH` : "Loading...",
+      description: "Minimum bounty amount",
+      icon: IconTarget,
+      status: "neutral"
+    }
+  ]
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "success":
+        return "text-green-600 dark:text-green-400"
+      case "warning":
+        return "text-yellow-600 dark:text-yellow-400"
+      case "error":
+        return "text-red-600 dark:text-red-400"
+      default:
+        return "text-blue-600 dark:text-blue-400"
+    }
+  }
+
+  const getStatusBadgeColor = (status: string) => {
+    switch (status) {
+      case "success":
+        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+      case "warning":
+        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
+      case "error":
+        return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
+      default:
+        return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
+    }
+  }
 
   return (
-    <div className="grid grid-cols-1 gap-4 px-4 lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
-      <Card className="@container/card bg-gradient-to-br from-red-900/50 to-red-800/30 border-white/20 border-2 backdrop-blur-sm">
-        <CardHeader>
-          <CardDescription className="text-white/80">Total Bounties</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl text-white">
-            {loadingTotal ? "..." : totalBounties?.toString() || "0"}
-          </CardTitle>
-          <CardAction>
-            <Badge variant="outline" className="bg-red-500/20 text-red-200 border-red-400/50">
-              <IconTrophy className="w-3 h-3" />
-              Total
-            </Badge>
-          </CardAction>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium text-white">
-            Active bounties: {activeBounties} <IconTrendingUp className="size-4 text-red-400" />
-          </div>
-          <div className="text-white/60">
-            Total bounties created on ConnectX
-          </div>
-        </CardFooter>
-      </Card>
-      
-      <Card className="@container/card bg-gradient-to-br from-red-900/50 to-red-800/30 border-white/20 border-2 backdrop-blur-sm">
-        <CardHeader>
-          <CardDescription className="text-white/80">Total Value Locked</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl text-white">
-            {loadingBounties ? "..." : `${parseFloat(formatEther(totalRewards)).toFixed(2)} AVAX`}
-          </CardTitle>
-          <CardAction>
-            <Badge variant="outline" className="bg-red-500/20 text-red-200 border-red-400/50">
-              <IconCoin className="w-3 h-3" />
-              TVL
-            </Badge>
-          </CardAction>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium text-white">
-            Growing ecosystem value <IconTrendingUp className="size-4 text-red-400" />
-          </div>
-          <div className="text-white/60">
-            Total AVAX locked in bounties
-          </div>
-        </CardFooter>
-      </Card>
-
-      <Card className="@container/card bg-gradient-to-br from-red-900/50 to-red-800/30 border-white/20 border-2 backdrop-blur-sm">
-        <CardHeader>
-          <CardDescription className="text-white/80">Active Developers</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl text-white">
-            {loadingBounties ? "..." : uniqueDevelopers}
-          </CardTitle>
-          <CardAction>
-            <Badge variant="outline" className="bg-red-500/20 text-red-200 border-red-400/50">
-              <IconUsers className="w-3 h-3" />
-              Devs
-            </Badge>
-          </CardAction>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium text-white">
-            Active contributors <IconCode className="size-4 text-red-400" />
-          </div>
-          <div className="text-white/60">
-            Unique developers claiming bounties
-          </div>
-        </CardFooter>
-      </Card>
-
-      <Card className="@container/card bg-gradient-to-br from-red-900/50 to-red-800/30 border-white/20 border-2 backdrop-blur-sm">
-        <CardHeader>
-          <CardDescription className="text-white/80">Completion Rate</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl text-white">
-            {loadingBounties ? "..." : totalBounties ? `${Math.round((completedBounties / Number(totalBounties)) * 100)}%` : "0%"}
-          </CardTitle>
-          <CardAction>
-            <Badge variant="outline" className="bg-red-500/20 text-red-200 border-red-400/50">
-              <IconTrendingUp className="w-3 h-3" />
-              Success
-            </Badge>
-          </CardAction>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium text-white">
-            {completedBounties} completed bounties <IconTrophy className="size-4 text-red-400" />
-          </div>
-          <div className="text-white/60">
-            Bounties successfully completed
-          </div>
-        </CardFooter>
-      </Card>
+    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+      {platformData.map((item, index) => (
+        <Card key={index} className="relative overflow-hidden">
+          <CardHeader className="pb-2">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
+                {item.title}
+              </CardTitle>
+              <item.icon className={`h-4 w-4 ${getStatusColor(item.status)}`} />
+            </div>
+          </CardHeader>
+          <CardContent className="pt-0">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <div className={`text-2xl font-bold ${getStatusColor(item.status)}`}>
+                  {item.value}
+                </div>
+                <Badge className={getStatusBadgeColor(item.status)}>
+                  {item.status}
+                </Badge>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {item.description}
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      ))}
     </div>
   )
 }

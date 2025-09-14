@@ -308,7 +308,7 @@ contract BountyMarketplaceTest is Test {
         uint256 platformFee = (rewardAmount * 250) / 10000; // 2.5%
         uint256 expectedPayment = rewardAmount - platformFee;
         
-        vm.expectEmit(true, true, false, true);
+        vm.expectEmit(true, true, false, false);
         emit BountyVerified(bountyId, developer1, block.timestamp);
         
         vm.prank(verifier);

@@ -1,125 +1,245 @@
 "use client"
 
-import { useAccount } from 'wagmi';
-import { useTotalBounties, useMaintainerBounties } from '@/contractsABI/contractHooks';
+import * as React from "react"
+import { IconPlus, IconCoin, IconUsers, IconChartLine, IconSettings, IconPlayerPause, IconBadge } from "@tabler/icons-react"
+import { useAccount } from "wagmi"
+import { formatEther } from "viem"
+import { 
+  useTotalBounties, 
+  useMaintainerBounties, 
+  useAllBounties,
+  usePlatformFeePercentage,
+  useMinimumBountyAmount,
+  useMaximumClaimDuration,
+  useFeeRecipient,
+  useIsPaused 
+} from "@/contractsABI/contractHooks"
+
+import { Badge } from "@/components/ui/badge"
+import {
+  Card,
+  CardAction,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { VerifierRoleCard } from "@/components/verifier-role-card"
 
 export function MaintainerSectionCards() {
-  const { address } = useAccount();
+  const { address } = useAccount()
+  const userAddress = address || '0x0000000000000000000000000000000000000000'
   
-  // Get total bounties count
-  const { totalBounties, isLoading: loadingTotal } = useTotalBounties();
+  // Core bounty data
+  const { totalBounties, isLoading: loadingTotal } = useTotalBounties()
+  const { bountyIds, isLoading: loadingBounties } = useMaintainerBounties(userAddress)
+  const { bounties: allBounties, isLoading: loadingAllBounties } = useAllBounties()
   
-  // Get maintainer's bounties
-  const { bountyIds, isLoading: loadingBounties } = useMaintainerBounties(address || '0x0');
+  // Platform configuration data
+  const { feePercentage, isLoading: loadingFee } = usePlatformFeePercentage()
+  const { minimumAmount, isLoading: loadingMinAmount } = useMinimumBountyAmount()
+  const { maxDuration, isLoading: loadingMaxDuration } = useMaximumClaimDuration()
+  const { feeRecipient, isLoading: loadingFeeRecipient } = useFeeRecipient()
+  const { isPaused, isLoading: loadingPaused } = useIsPaused()
 
   // Calculate statistics
-  const totalCreated = bountyIds?.length || 0;
-  const contributionPercentage = (() => {
-    if (loadingTotal || loadingBounties) return 0;
-    const total = Number(totalBounties) || 0;
-    return total > 0 ? Math.round((totalCreated / total) * 100) : 0;
-  })();
+  const totalCreated = bountyIds?.length || 0
+  const contributionPercentage = React.useMemo(() => {
+    if (loadingTotal || loadingBounties) return 0
+    const total = Number(totalBounties) || 0
+    return total > 0 ? Math.round((totalCreated / total) * 100) : 0
+  }, [totalCreated, totalBounties, loadingTotal, loadingBounties])
+
+  // Calculate total value of maintainer's bounties
+  const totalValueCreated = React.useMemo(() => {
+    if (!bountyIds || !allBounties) return BigInt(0)
+    
+    return bountyIds.reduce((acc: bigint, bountyId: bigint) => {
+      const bounty = allBounties.find(b => b.id === bountyId)
+      return bounty ? acc + bounty.rewardAmount : acc
+    }, BigInt(0))
+  }, [bountyIds, allBounties])
+
+  // Calculate active vs completed bounties
+  const { activeBounties, completedBounties } = React.useMemo(() => {
+    if (!bountyIds || !allBounties) return { activeBounties: 0, completedBounties: 0 }
+    
+    let active = 0
+    let completed = 0
+    
+    bountyIds.forEach((bountyId: bigint) => {
+      const bounty = allBounties.find(b => b.id === bountyId)
+      if (bounty) {
+        if (bounty.status === 2) { // Assuming 2 is completed status
+          completed++
+        } else if (bounty.status === 0 || bounty.status === 1) { // Active or claimed
+          active++
+        }
+      }
+    })
+    
+    return { activeBounties: active, completedBounties: completed }
+  }, [bountyIds, allBounties])
+
+  const isLoading = loadingTotal || loadingBounties || loadingAllBounties
+
+  if (!address) {
+    return (
+      <div className="grid grid-cols-1 gap-4 px-4 lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
+        <Card className="@container/card col-span-full bg-gradient-to-br from-red-900/50 to-red-800/30 border-white/20 border-2 backdrop-blur-sm">
+          <CardHeader>
+            <CardTitle className="text-white">Connect Your Wallet</CardTitle>
+            <CardDescription className="text-white/80">
+              Please connect your wallet to view your maintainer dashboard
+            </CardDescription>
+          </CardHeader>
+        </Card>
+      </div>
+    )
+  }
 
   return (
-    <div className="px-4 lg:px-6">
-      <div
-        className="grid auto-rows-min gap-4 md:grid-cols-3"
-        data-slot="grid"
-      >
-        <div
-          className="bg-gradient-to-br from-red-900/50 to-red-800/30 border-white/20 border-2 backdrop-blur-sm text-white shadow relative overflow-hidden rounded-xl"
-          data-slot="card"
-        >
-          <div className="p-6 flex flex-row items-center justify-between space-y-0 pb-2">
-            <h3 className="tracking-tight text-sm font-medium text-white/80">
-              Bounties Created
-            </h3>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              className="h-4 w-4 text-red-400"
-            >
-              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-            </svg>
+    <div className="grid grid-cols-1 gap-4 px-4 lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-6">
+      {/* Verifier Role Card - Always show first */}
+      <VerifierRoleCard />
+      
+      {/* Bounties Created */}
+      <Card className="@container/card bg-gradient-to-br from-red-900/50 to-red-800/30 border-white/20 border-2 backdrop-blur-sm">
+        <CardHeader>
+          <CardDescription className="text-white/80">Bounties Created</CardDescription>
+          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl text-white">
+            {isLoading ? "..." : totalCreated}
+          </CardTitle>
+          <CardAction>
+            <Badge variant="outline" className="bg-red-500/20 text-red-200 border-red-400/50">
+              <IconPlus className="w-3 h-3" />
+              Created
+            </Badge>
+          </CardAction>
+        </CardHeader>
+        <CardFooter className="flex-col items-start gap-1.5 text-sm">
+          <div className="line-clamp-1 flex gap-2 font-medium text-white">
+            {contributionPercentage}% of platform <IconChartLine className="size-4 text-red-400" />
           </div>
-          <div className="p-6 pt-0">
-            <div className="text-2xl font-bold text-white">
-              {loadingBounties ? '...' : totalCreated.toString()}
-            </div>
-            <p className="text-xs text-white/60">
-              {totalCreated > 0 ? '+12% from last month' : 'Create your first bounty'}
-            </p>
+          <div className="text-white/60">
+            Your contribution to the bounty ecosystem
           </div>
-        </div>
+        </CardFooter>
+      </Card>
+      
+      {/* Total Value Created */}
+      <Card className="@container/card bg-gradient-to-br from-red-900/50 to-red-800/30 border-white/20 border-2 backdrop-blur-sm">
+        <CardHeader>
+          <CardDescription className="text-white/80">Total Value Created</CardDescription>
+          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl text-white">
+            {isLoading ? "..." : `${parseFloat(formatEther(totalValueCreated)).toFixed(2)} AVAX`}
+          </CardTitle>
+          <CardAction>
+            <Badge variant="outline" className="bg-red-500/20 text-red-200 border-red-400/50">
+              <IconCoin className="w-3 h-3" />
+              Value
+            </Badge>
+          </CardAction>
+        </CardHeader>
+        <CardFooter className="flex-col items-start gap-1.5 text-sm">
+          <div className="line-clamp-1 flex gap-2 font-medium text-white">
+            Across {totalCreated} bounties <IconCoin className="size-4 text-red-400" />
+          </div>
+          <div className="text-white/60">
+            Total AVAX allocated for bounties
+          </div>
+        </CardFooter>
+      </Card>
 
-        <div
-          className="bg-gradient-to-br from-red-900/50 to-red-800/30 border-white/20 border-2 backdrop-blur-sm text-white shadow relative overflow-hidden rounded-xl"
-          data-slot="card"
-        >
-          <div className="p-6 flex flex-row items-center justify-between space-y-0 pb-2">
-            <h3 className="tracking-tight text-sm font-medium text-white/80">
-              Network Total
-            </h3>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              className="h-4 w-4 text-red-400"
-            >
-              <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-            </svg>
-          </div>
-          <div className="p-6 pt-0">
-            <div className="text-2xl font-bold text-white">
-              {loadingTotal ? '...' : totalBounties?.toString() || '0'}
+      {/* Active vs Completed */}
+      <Card className="@container/card bg-gradient-to-br from-red-900/50 to-red-800/30 border-white/20 border-2 backdrop-blur-sm">
+        <CardHeader>
+          <CardDescription className="text-white/80">Bounty Status</CardDescription>
+          <CardTitle className="text-lg font-semibold text-white">
+            <div className="space-y-1">
+              <div className="flex justify-between">
+                <span className="text-sm">Active:</span>
+                <span>{activeBounties}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-sm">Completed:</span>
+                <span>{completedBounties}</span>
+              </div>
             </div>
-            <p className="text-xs text-white/60">
-              Total bounties on platform
-            </p>
+          </CardTitle>
+          <CardAction>
+            <Badge variant="outline" className="bg-red-500/20 text-red-200 border-red-400/50">
+              <IconUsers className="w-3 h-3" />
+              Status
+            </Badge>
+          </CardAction>
+        </CardHeader>
+        <CardFooter className="flex-col items-start gap-1.5 text-sm">
+          <div className="line-clamp-1 flex gap-2 font-medium text-white">
+            {completedBounties > 0 ? Math.round((completedBounties / totalCreated) * 100) : 0}% completion rate <IconChartLine className="size-4 text-red-400" />
           </div>
-        </div>
+          <div className="text-white/60">
+            Success rate of your bounties
+          </div>
+        </CardFooter>
+      </Card>
 
-        <div
-          className="bg-gradient-to-br from-red-900/50 to-red-800/30 border-white/20 border-2 backdrop-blur-sm text-white shadow relative overflow-hidden rounded-xl"
-          data-slot="card"
-        >
-          <div className="p-6 flex flex-row items-center justify-between space-y-0 pb-2">
-            <h3 className="tracking-tight text-sm font-medium text-white/80">
-              Your Contribution
-            </h3>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              className="h-4 w-4 text-red-400"
-            >
-              <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-              <polyline points="9,22 9,12 15,12 15,22" />
-            </svg>
-          </div>
-          <div className="p-6 pt-0">
-            <div className="text-2xl font-bold text-white">
-              {contributionPercentage}%
+      {/* Platform Settings */}
+      <Card className="@container/card bg-gradient-to-br from-red-900/50 to-red-800/30 border-white/20 border-2 backdrop-blur-sm">
+        <CardHeader>
+          <CardDescription className="text-white/80">Platform Settings</CardDescription>
+          <CardTitle className="text-lg font-semibold text-white">
+            <div className="space-y-1">
+              <div className="flex justify-between">
+                <span className="text-sm">Fee:</span>
+                <span>{loadingFee ? "..." : `${Number(feePercentage || 0) / 100}%`}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-sm">Min:</span>
+                <span>{loadingMinAmount ? "..." : `${parseFloat(formatEther(minimumAmount || BigInt(0))).toFixed(2)}`}</span>
+              </div>
             </div>
-            <p className="text-xs text-white/60">
-              Of platform&apos;s total bounties
-            </p>
+          </CardTitle>
+          <CardAction>
+            <Badge variant="outline" className="bg-red-500/20 text-red-200 border-red-400/50">
+              <IconSettings className="w-3 h-3" />
+              Config
+            </Badge>
+          </CardAction>
+        </CardHeader>
+        <CardFooter className="flex-col items-start gap-1.5 text-sm">
+          <div className="line-clamp-1 flex gap-2 font-medium text-white">
+            Platform configuration <IconSettings className="size-4 text-red-400" />
           </div>
-        </div>
-      </div>
+          <div className="text-white/60">
+            Current platform parameters
+          </div>
+        </CardFooter>
+      </Card>
+
+      {/* Platform Status */}
+      <Card className="@container/card bg-gradient-to-br from-red-900/50 to-red-800/30 border-white/20 border-2 backdrop-blur-sm">
+        <CardHeader>
+          <CardDescription className="text-white/80">Platform Status</CardDescription>
+          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl text-white">
+            {loadingPaused ? "..." : (isPaused ? "PAUSED" : "ACTIVE")}
+          </CardTitle>
+          <CardAction>
+            <Badge variant="outline" className={`${isPaused ? 'bg-orange-500/20 text-orange-200 border-orange-400/50' : 'bg-green-500/20 text-green-200 border-green-400/50'}`}>
+              {isPaused ? <IconPlayerPause className="w-3 h-3" /> : <IconBadge className="w-3 h-3" />}
+              {isPaused ? "Paused" : "Running"}
+            </Badge>
+          </CardAction>
+        </CardHeader>
+        <CardFooter className="flex-col items-start gap-1.5 text-sm">
+          <div className="line-clamp-1 flex gap-2 font-medium text-white">
+            Platform operational status <IconChartLine className="size-4 text-red-400" />
+          </div>
+          <div className="text-white/60">
+            {isPaused ? "Platform is currently paused" : "Platform is operational"}
+          </div>
+        </CardFooter>
+      </Card>
     </div>
   )
 }
